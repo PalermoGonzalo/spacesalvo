@@ -4,6 +4,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class Player {
     @Id
@@ -13,6 +15,8 @@ public class Player {
     //@Column(name = "usuario")
     private String userName;
 
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    Set<Player> player;
 
     public Player() { }
 

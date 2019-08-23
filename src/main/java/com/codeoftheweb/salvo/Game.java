@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Set;
 
 @Entity
 public class Game {
@@ -14,6 +15,9 @@ public class Game {
     private long id;
 
     private LocalDateTime creationDate;
+
+    @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
+    Set<Game> game;
 
     public Game() {
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
