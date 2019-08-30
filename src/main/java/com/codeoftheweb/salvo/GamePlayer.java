@@ -14,17 +14,39 @@ public class GamePlayer {
     private long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name="fk_game")
     private Game game;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player_id")
+    @JoinColumn(name="fk_player")
     private Player player;
 
     private LocalDateTime joinDate;
 
-    public GamePlayer() {
+    //private Date joinDate;
+
+    public GamePlayer(Player player, Game game) {
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
         this.joinDate = dateTime;
+        this.game = game;
+        this.player = player;
     }
+
+    public long getId(){
+        return id;
+    }
+
+    public Player getPlayer(){
+        return player;
+    }
+
+    public Game getGame(){
+        return game;
+    }
+
+    public String getJoinDate(){
+        return joinDate.toString();
+    }
+
+    //public Date getJoinDate(){return joinDate;}
 }

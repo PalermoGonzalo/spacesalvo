@@ -1,9 +1,11 @@
 package com.codeoftheweb.salvo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,24 +18,22 @@ public class Player {
     private String userName;
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    Set<Player> player;
+    private Set<GamePlayer> gamePlayers;
 
     public Player() { }
 
     public Player(String user) {
         userName = user;
+        this.gamePlayers = new HashSet<>();
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    public Long getId(){return id;}
 
-    public String toString() {
-        return userName;
-    }
+    @JsonIgnore
+    public Set<GamePlayer> getGamePlayers(){return gamePlayers;}
 }
 
