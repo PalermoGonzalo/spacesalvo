@@ -24,6 +24,7 @@ public class GamePlayer {
     private LocalDateTime joinDate;
 
     //private Date joinDate;
+    public GamePlayer(){}
 
     public GamePlayer(Player player, Game game) {
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);

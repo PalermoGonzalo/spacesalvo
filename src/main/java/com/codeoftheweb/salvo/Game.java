@@ -28,12 +28,18 @@ public class Game {
         this.gamePlayers = new HashSet<>();
     }
 
+    public Game(long hours) {
+        LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
+        this.creationDate = dateTime.plusHours(hours);
+        this.gamePlayers = new HashSet<>();
+    }
+
     public long getId(){
         return id;
     }
 
     public String getCreationDate() {
-        return creationDate.toString();
+        return creationDate.toString().replace("T", " ");
     }
 
     @JsonIgnore

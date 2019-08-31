@@ -16,6 +16,8 @@ public class SalvoController {
 
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @RequestMapping("/games")
     public List<Object> findAllGames(){
@@ -25,16 +27,16 @@ public class SalvoController {
                 .map(game -> makeGameDto(game))
                 .collect(Collectors.toList());
     }
-/*
+
     @RequestMapping("/players")
     public List<Object> findAllPlayers(){
-        return gameRepository
+        return playerRepository
                 .findAll()
                 .stream()
-                .map(game->makePlayerDto(game))
+                .map(player -> makePlayerDto(player))
                 .collect(Collectors.toList());
     }
-*/
+
     private Map<String, Object> makeGameDto(Game game){
         Map<String, Object> gameDto = new LinkedHashMap<>();
         gameDto.put("id", game.getId());
@@ -45,6 +47,7 @@ public class SalvoController {
                 .stream()
                 .map(gamePlayer -> makeGamePlayerDto(gamePlayer))
                 .collect(Collectors.toList());
+        gameDto.put("gamePlayers", gamePlayerDto);
         return gameDto;
     }
 

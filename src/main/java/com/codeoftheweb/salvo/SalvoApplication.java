@@ -18,17 +18,17 @@ public class SalvoApplication {
 		GameRepository gameRepository,
 		GamePlayerRepository gamePlayerRepository) {
 		return (args) -> {
-			Player player1 = new Player();
-			Player player2 = new Player();
-			Player player3 = new Player();
+			Player player1 = new Player("pedro@gmail.com");
+			Player player2 = new Player("mateo@gmail.com");
+			Player player3 = new Player("marcos@gmail.com");
 
 			playerRepository.save(player1);
 			playerRepository.save(player2);
 			playerRepository.save(player3);
 
 			Game game1 = new Game();
-			Game game2 = new Game();
-			Game game3 = new Game();
+			Game game2 = new Game(1);
+			Game game3 = new Game(2);
 
 			gameRepository.save(game1);
 			gameRepository.save(game2);
