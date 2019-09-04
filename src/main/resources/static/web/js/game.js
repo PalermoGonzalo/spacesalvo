@@ -1,3 +1,28 @@
+var app = new Vue({
+    el: "#mainApp",
+    data: {
+        games:""
+    },
+     created() {
+         this.schedule();
+         this.handleResize();
+         window.addEventListener('resize', this.handleResize);
+     },
+     methods: {
+             schedule: function() {
+                 //let that = this;
+                 fetch('/api/games')
+                     .then(function(response) {
+                         return response.json();
+                     })
+                     .then(function(myJson) {
+                         this.app.games = myJson.Schedule;
+                         return myJson;
+                     });
+             }
+     }
+});
+/*
 $('document').ready(function(){
     $.get('/api/games')
     .done((games) => {createdGameList(games);})
@@ -17,3 +42,4 @@ function createdGameList(games){
         );
     });
 }
+*/

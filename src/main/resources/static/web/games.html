@@ -5,6 +5,12 @@
     <title>Play Salvo</title>
 </head>
 <body>
+    <div id="salvoAPP">
+        <ul>
+            <li v-for="game in games"> {{ game.creationDate }} - {{ game.player1 }} vs. {{ game.player2 }} </li>
+        </ul>
+    </div>
+
     <script src="./js/games.js"></script>
 </body>
 </html>
