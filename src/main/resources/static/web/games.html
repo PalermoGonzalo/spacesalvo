@@ -5,12 +5,14 @@
     <title>Play Salvo</title>
 </head>
 <body>
-    <div id="salvoAPP">
+    <div id="salvoApp">
         <ul>
-            <li v-for="game in games"> {{ game.creationDate }} - {{ game.player1 }} vs. {{ game.player2 }} </li>
+            <li v-for="game in games"> {{ game.created }} - {{ game.gamePlayers[0].player.email }} vs. {{ game.gamePlayers[0].player.email }} </li>
         </ul>
     </div>
 
-    <script src="./js/games.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Carga de codigo en Vue.js -->
+    <script src="./js/game.js"></script>
 </body>
 </html>

@@ -1,12 +1,10 @@
 var app = new Vue({
-    el: "#mainApp",
+    el: "#salvoApp",
     data: {
         games:""
     },
      created() {
          this.schedule();
-         this.handleResize();
-         window.addEventListener('resize', this.handleResize);
      },
      methods: {
              schedule: function() {
@@ -16,7 +14,8 @@ var app = new Vue({
                          return response.json();
                      })
                      .then(function(myJson) {
-                         this.app.games = myJson.Schedule;
+                         this.app.games = myJson;
+                         console.log(this.app.games);
                          return myJson;
                      });
              }
