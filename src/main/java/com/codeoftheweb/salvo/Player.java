@@ -6,6 +6,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -35,5 +37,12 @@ public class Player {
 
     @JsonIgnore
     public Set<GamePlayer> getGamePlayers(){return gamePlayers;}
+
+    public Map<String, Object> getDto(){
+        Map<String, Object> playerDto = new LinkedHashMap<>();
+        playerDto.put("id", this.getId());
+        playerDto.put("email", this.getUserName());
+        return playerDto;
+    }
 }
 

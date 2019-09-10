@@ -6,8 +6,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Game {
@@ -43,9 +43,22 @@ public class Game {
     }
 
     @JsonIgnore
-    public Set<GamePlayer> getGamePlayer(){
+    public Set<GamePlayer> getGamePlayers(){
         return gamePlayers;
     }
 
+    public Map<String, Object> getDto(){
+        Map<String, Object> gameDto = new LinkedHashMap<>();
+        gameDto.put("id", this.id);
+        gameDto.put("created", this.creationDate);
+
+        List<Map<String, Object>> gamePlayerDto =
+                this.getGamePlayers()
+                .stream()
+                .map(gamePlayer -> gamePlayer.getDto())
+                .collect(Collectors.toList());
+        gameDto.put("gamePlayers", gamePlayerDto);
+        return gameDto;
+    }
 
 }

@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -58,4 +60,10 @@ public class GamePlayer {
         return ships;
     }
     //public Date getJoinDate(){return joinDate;}
+    public Map<String, Object> getDto(){
+        Map<String, Object> gamePlayerDto = new LinkedHashMap<>();
+        gamePlayerDto.put("id", this.getId());
+        gamePlayerDto.put("player", player.getDto());
+        return gamePlayerDto;
+    }
 }
