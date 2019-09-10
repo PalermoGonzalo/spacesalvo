@@ -3,6 +3,8 @@ package com.codeoftheweb.salvo;
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 //import java.util.HashSet;
@@ -17,9 +19,11 @@ public class Ship {
 
     private String shipType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="fk_gamePlayer")
     private long GamePlayer;
+
+    @ElementCollection
+    @Column(name="location")
+    private List<String> location = new ArrayList<>();
 
     public Ship() { }
 
