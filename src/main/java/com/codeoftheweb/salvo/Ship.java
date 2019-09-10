@@ -19,7 +19,9 @@ public class Ship {
 
     private String shipType;
 
-    private long GamePlayer;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="fk_gamePlayer")
+    private GamePlayer gamePlayer;
 
     @ElementCollection
     @Column(name="location")
@@ -27,13 +29,13 @@ public class Ship {
 
     public Ship() { }
 
-    public Ship(String shipType, long GamePlayer){
+    public Ship(String shipType, GamePlayer GamePlayer){
         this.shipType = shipType;
-        this.GamePlayer = GamePlayer;
+        this.gamePlayer = GamePlayer;
     }
 
-    public long getGamePlayer() {
-        return GamePlayer;
+    public GamePlayer getGamePlayer() {
+        return gamePlayer;
     }
 
     public String getShipType(){
