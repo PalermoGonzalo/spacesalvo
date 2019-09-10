@@ -16,6 +16,7 @@ public class SalvoApplication {
 	public CommandLineRunner initData(
 		PlayerRepository playerRepository,
 		GameRepository gameRepository,
+		ShipRepository shipRepository,
 		GamePlayerRepository gamePlayerRepository) {
 		return (args) -> {
 			Player player1 = new Player("pedro@gmail.com");
@@ -47,6 +48,20 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gp4);
 			gamePlayerRepository.save(gp5);
 			gamePlayerRepository.save(gp6);
+
+			Ship sp1 = new Ship ("Destroyer", gp1);
+			Ship sp2 = new Ship ("Submarine", gp1);
+			Ship sp3 = new Ship ("Patrol Boat", gp1);
+			Ship sp4 = new Ship ("Destroyer", gp2);
+			Ship sp5 = new Ship ("Submarine", gp2);
+			Ship sp6 = new Ship ("Patrol Boat", gp2);
+
+			shipRepository.save(sp1);
+			shipRepository.save(sp2);
+			shipRepository.save(sp3);
+			shipRepository.save(sp4);
+			shipRepository.save(sp5);
+			shipRepository.save(sp6);
 		};
 	}
 
