@@ -16,6 +16,8 @@ public class SalvoController {
     private GameRepository gameRepository;
     @Autowired
     private PlayerRepository playerRepository;
+    @Autowired
+    private ShipRepository shipRepository;
 
     @RequestMapping("/games")
     public List<Object> findAllGames(){
@@ -32,6 +34,15 @@ public class SalvoController {
                 .findAll()
                 .stream()
                 .map(player -> player.getDto())
+                .collect(Collectors.toList());
+    }
+
+    @RequestMapping("/ships")
+    public List<Object> findAllShips(){
+        return shipRepository
+                .findAll()
+                .stream()
+                .map(ship -> ship.getDto())
                 .collect(Collectors.toList());
     }
 

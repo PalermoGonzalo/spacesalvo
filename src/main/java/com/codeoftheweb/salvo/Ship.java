@@ -4,7 +4,9 @@ package com.codeoftheweb.salvo;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.*;
 
 //import java.util.HashSet;
@@ -42,4 +44,15 @@ public class Ship {
         return shipType;
     }
 
+    public long getId(){
+        return this.id;
+    }
+
+    public Map<String, Object> getDto(){
+        Map<String, Object> shipDto = new LinkedHashMap<>();
+        shipDto.put("id", this.getId());
+        shipDto.put("shipType", this.getShipType());
+        shipDto.put("gamePlayer", this.getGamePlayer());
+        return shipDto;
+    }
 }
