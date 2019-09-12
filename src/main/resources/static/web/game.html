@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Play Salvo</title>
+</head>
+<body>
+    <h2>Ship Locations!</h2>
+    <div id="salvoApp">
+        <table>
+            <tr v-for="index in 10">
+                <td v-for="index in 10"> {{ index }} </td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Carga de codigo en Vue.js -->
+    <script src="./js/game.js"></script>
+</body>
+</html>
