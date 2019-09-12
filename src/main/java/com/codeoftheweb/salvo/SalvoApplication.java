@@ -5,6 +5,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import javax.persistence.ElementCollection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 @SpringBootApplication
 public class SalvoApplication {
 
@@ -49,12 +54,12 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gp5);
 			gamePlayerRepository.save(gp6);
 
-			Ship sp1 = new Ship ("Destroyer", gp1);
-			Ship sp2 = new Ship ("Submarine", gp1);
-			Ship sp3 = new Ship ("Patrol Boat", gp1);
-			Ship sp4 = new Ship ("Destroyer", gp2);
-			Ship sp5 = new Ship ("Submarine", gp2);
-			Ship sp6 = new Ship ("Patrol Boat", gp2);
+			Ship sp1 = new Ship ("Destroyer", gp1, Arrays.asList("G5","G6","G7","G8"));
+			Ship sp2 = new Ship ("Submarine", gp1, Arrays.asList("D1","D2"));
+			Ship sp3 = new Ship ("Patrol Boat", gp1, Arrays.asList("C1","C2","C3"));
+			Ship sp4 = new Ship ("Destroyer", gp2, Arrays.asList("C1","C2","C3","C4"));
+			Ship sp5 = new Ship ("Submarine", gp2, Arrays.asList("A1","A2"));
+			Ship sp6 = new Ship ("Patrol Boat", gp2, Arrays.asList("G1","G2","G3"));
 
 			shipRepository.save(sp1);
 			shipRepository.save(sp2);

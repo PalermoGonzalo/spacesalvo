@@ -1,12 +1,10 @@
 package com.codeoftheweb.salvo;
 
 //import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.persistence.*;
 
 //import java.util.HashSet;
@@ -31,9 +29,10 @@ public class Ship {
 
     public Ship() { }
 
-    public Ship(String shipType, GamePlayer GamePlayer){
+    public Ship(String shipType, GamePlayer GamePlayer, List<String> locations){
         this.shipType = shipType;
         this.gamePlayer = GamePlayer;
+        this.location = locations;
     }
 
     public GamePlayer getGamePlayer() {
@@ -48,11 +47,17 @@ public class Ship {
         return this.id;
     }
 
+    public List<String> getLocations(){
+        return this.location;
+    }
+
+
     public Map<String, Object> getDto(){
         Map<String, Object> shipDto = new LinkedHashMap<>();
         shipDto.put("id", this.getId());
         shipDto.put("shipType", this.getShipType());
-        shipDto.put("gamePlayer", this.getGamePlayer());
+        shipDto.put("locations", this.getLocations());
         return shipDto;
     }
+
 }
