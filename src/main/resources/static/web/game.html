@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,10 +7,11 @@
 <body>
     <div id="salvoApp">
         <center>
-            <h2>Ship Locations!</h2>
+            <h2> {{ viewer.email }} - Ship Locations!</h2>
+            <p> {{ viewer.email }} vs {{ enemy.email }} </p>
             <table>
-                <tr v-for="index in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
-                    <td v-for="index in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;"></td>
+                <tr v-for="indexV in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
+                    <td v-for="indexH in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexV -1) + indexH" v-bind:style="'background-color: ' + select(grid.charAt(indexV -1) + indexH)"></td>
                 </tr>
             </table>
         </center>

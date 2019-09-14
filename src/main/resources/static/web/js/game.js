@@ -1,51 +1,52 @@
 var app = new Vue({
     el: "#salvoApp",
     data: {
-        route:"",
-        games:""
+        grid: "ABCDEFGHIJ",
+        selectedPlayer:"",
+        games:"",
+        viewer:"",
+        ships:"",
+        shipsLocations:"",
+        enemy:""
     },
      created() {
         let uri = window.location.search.substring(1);
         let params = new URLSearchParams(uri);
-        route=params.get("gp");
-        this.schedule();
+        this.selectedPlayer = params.get("gp");
+        this.loadGames();
      },
      methods: {
-             schedule: function() {
-                 //var url = new URL("localhost:8080/api/game_view/" + route);
-                  //   params = {"1"}
-                 //Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
-                 //console.log(url);
-                 fetch("localhost:8080/api/game_view/1")
+             loadGames: function() {
+                 var url = new URL("http://localhost:8080/api/game_view/1");
+                 fetch(url)
                      .then(function(response) {
                          return response.json();
                      })
                      .then(function(myJson) {
                          this.app.games = myJson;
-                         //console.log(this.app.games);
+                         this.app.loadPlayers();
                          return myJson;
                      });
+             },
+             loadPlayers: function(){
+                let that = this;
+                that.games.gamePlayers.forEach(function(player){
+                    if(player.id == that.selectedPlayer){
+                        that.viewer = player.player;
+                        that.ships = player.ships;
+                        that.ships.forEach(function(ship){
+                            that.shipsLocations = [...that.shipsLocations, ...ship.locations];
+                        });
+                    }else{
+                        that.enemy = player.player;
+                    }
+                });
+             },
+             select: function(id){
+                if( this.shipsLocations.indexOf(id) != -1 ){
+                    return "blue";
+                }
+                return "white";
              }
      }
 });
-/*
-$('document').ready(function(){
-    $.get('/api/games')
-    .done((games) => {createdGameList(games);})
-    .fail((jqXHR, status) => {console.error(status);});
-});
-
-function createdGameList(games){
-    let gameList = $('#game-list');
-
-    games.forEach(game => {
-        gameList.append(
-            `<li>
-                  $(game.created);
-                  $(game.gamePlayers[0].player.email);
-                  $(game.gamePlayers[1].player.email);
-             </li>`
-        );
-    });
-}
-*/
