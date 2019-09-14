@@ -1,21 +1,28 @@
 var app = new Vue({
     el: "#salvoApp",
     data: {
+        route:"",
         games:""
     },
      created() {
-         this.schedule();
+        let uri = window.location.search.substring(1);
+        let params = new URLSearchParams(uri);
+        route=params.get("gp");
+        this.schedule();
      },
      methods: {
              schedule: function() {
-                 //let that = this;
-                 fetch('/api/games')
+                 //var url = new URL("localhost:8080/api/game_view/" + route);
+                  //   params = {"1"}
+                 //Object.keys(params).forEach(key => url.searchParams.append(key, params[key]))
+                 //console.log(url);
+                 fetch("localhost:8080/api/game_view/1")
                      .then(function(response) {
                          return response.json();
                      })
                      .then(function(myJson) {
                          this.app.games = myJson;
-                         console.log(this.app.games);
+                         //console.log(this.app.games);
                          return myJson;
                      });
              }

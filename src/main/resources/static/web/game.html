@@ -5,13 +5,15 @@
     <title>Play Salvo</title>
 </head>
 <body>
-    <h2>Ship Locations!</h2>
     <div id="salvoApp">
-        <table>
-            <tr v-for="index in 10">
-                <td v-for="index in 10"> {{ index }} </td>
-            </tr>
-        </table>
+        <center>
+            <h2>Ship Locations!</h2>
+            <table>
+                <tr v-for="index in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
+                    <td v-for="index in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;"></td>
+                </tr>
+            </table>
+        </center>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
