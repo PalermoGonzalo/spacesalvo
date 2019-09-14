@@ -28,6 +28,9 @@ public class GamePlayer {
     @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
     private Set<Ship> ships = new HashSet<>();
 
+    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
+    private Set<Salvo> salvo = new HashSet<>();
+
     //private Date joinDate;
     public GamePlayer(){}
 
@@ -56,6 +59,8 @@ public class GamePlayer {
 
     public Set<Ship> getShips(){ return ships;}
 
+    public Set<Salvo> getSalvo(){ return salvo;}
+
     //public Date getJoinDate(){return joinDate;}
     public Map<String, Object> getDto(){
         Map<String, Object> gamePlayerDto = new LinkedHashMap<>();
@@ -67,6 +72,12 @@ public class GamePlayer {
                .map(ships -> ships.getDto())
                .collect(Collectors.toList());
         gamePlayerDto.put("ships", shipsDto);
+        List<Map<String, Object>> salvoDto =
+                this.getSalvo()
+                        .stream()
+                        .map(salvo -> salvo.getDto())
+                        .collect(Collectors.toList());
+        gamePlayerDto.put("salvo", salvoDto);
         return gamePlayerDto;
     }
 }

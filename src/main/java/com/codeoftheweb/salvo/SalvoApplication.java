@@ -67,6 +67,8 @@ public class SalvoApplication {
 			shipRepository.save(sp4);
 			shipRepository.save(sp5);
 			shipRepository.save(sp6);
+
+
 		};
 	}
 
