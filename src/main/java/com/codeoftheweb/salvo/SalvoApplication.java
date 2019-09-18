@@ -22,6 +22,7 @@ public class SalvoApplication {
 		PlayerRepository playerRepository,
 		GameRepository gameRepository,
 		ShipRepository shipRepository,
+		SalvoRepository salvoRepository,
 		GamePlayerRepository gamePlayerRepository) {
 		return (args) -> {
 			Player player1 = new Player("pedro@gmail.com");
@@ -68,7 +69,19 @@ public class SalvoApplication {
 			shipRepository.save(sp5);
 			shipRepository.save(sp6);
 
+			Salvo sv1 = new Salvo(1, gp1, Arrays.asList("A4","D8"));
+			Salvo sv2 = new Salvo(2, gp1, Arrays.asList("I3","B1"));
+			Salvo sv3 = new Salvo(3, gp1, Arrays.asList("G9","C8"));
+			Salvo sv4 = new Salvo(1, gp2, Arrays.asList("G1","D9"));
+			Salvo sv5 = new Salvo(2, gp2, Arrays.asList("I4","E5"));
+			Salvo sv6 = new Salvo(3, gp2, Arrays.asList("E4","C2"));
 
+			salvoRepository.save(sv1);
+			salvoRepository.save(sv2);
+			salvoRepository.save(sv3);
+			salvoRepository.save(sv4);
+			salvoRepository.save(sv5);
+			salvoRepository.save(sv6);
 		};
 	}
 

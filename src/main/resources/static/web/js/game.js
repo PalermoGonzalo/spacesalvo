@@ -7,6 +7,8 @@ var app = new Vue({
         viewer:"",
         ships:"",
         shipsLocations:"",
+        localSalvo:"",
+        enemySalvo:"",
         enemy:""
     },
      created() {
@@ -24,6 +26,10 @@ var app = new Vue({
                      })
                      .then(function(myJson) {
                          this.app.games = myJson;
+                         this.app.ships = myJson.ships;
+                         this.app.ships.forEach(function(ship){
+                             this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
+                         });
                          this.app.loadPlayers();
                          return myJson;
                      });
@@ -32,21 +38,58 @@ var app = new Vue({
                 let that = this;
                 that.games.gamePlayers.forEach(function(player){
                     if(player.id == that.selectedPlayer){
-                        that.viewer = player.player;
-                        that.ships = player.ships;
-                        that.ships.forEach(function(ship){
-                            that.shipsLocations = [...that.shipsLocations, ...ship.locations];
-                        });
+                        that.viewer = player;
+                        that.viewer.salvo.forEach(function(localSalvo){
+                            that.localSalvo = [...that.localSalvo, ...localSalvo.locations];
+                         });
                     }else{
-                        that.enemy = player.player;
+                        that.enemy = player;
+                        that.enemy.salvo.forEach(function(localSalvo){
+                           that.enemySalvo = [...that.enemySalvo, ...localSalvo.locations];
+                        });
                     }
                 });
              },
              select: function(id){
-                if( this.shipsLocations.indexOf(id) != -1 ){
-                    return "blue";
+                let ret = "";
+                this.enemySalvo.forEach(function(enemySalvos){
+                    if(enemySalvos.indexOf(id) != -1){
+                        ret = "blue";
+                    }
+                });
+                if( this.shipsLocations.indexOf(id) != -1){
+                    if(ret == "blue"){
+                        ret = "red";
+                    }else{
+                        ret = "black";
+                    }
                 }
-                return "white";
-             }
+                if( ret == ""){
+                    return "white";
+                }else{
+                    return ret;
+                }
+             },
+             myShoots: function(id){
+                 let ret = "";
+                 this.localSalvo.forEach(function(localSalvos){
+                     if(localSalvos.indexOf(id) != -1){
+                         ret = "blue";
+                     }
+                 });
+                 /*
+                 if( this.shipsLocations.indexOf(id) != -1){
+                     if(ret == "blue"){
+                         ret = "red";
+                     }else{
+                         ret = "black";
+                     }
+                 }*/
+                 if( ret == ""){
+                     return "white";
+                 }else{
+                     return ret;
+                 }
+              }
      }
 });

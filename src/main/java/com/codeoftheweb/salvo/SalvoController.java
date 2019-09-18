@@ -19,6 +19,8 @@ public class SalvoController {
     @Autowired
     private PlayerRepository playerRepository;
     @Autowired
+    private GamePlayerRepository gamePlayerRepository;
+    @Autowired
     private ShipRepository shipRepository;
 
     @RequestMapping("/games")
@@ -41,8 +43,12 @@ public class SalvoController {
 
     @RequestMapping("/game_view/{id}")
     public Map<String, Object> getGame(@PathVariable("id") long id){
-        return (Map<String, Object>) gameRepository
-                .getOne(id).getDto();
+        GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
+        Map<String, Object> dto = gamePlayer.getGame().getDto();
+
+        dto.put("ships", gamePlayer.getShips().stream().map(ship -> ship.getDto()));
+
+        return dto;
     }
 
     @RequestMapping("/ships")

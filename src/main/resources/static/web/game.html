@@ -7,16 +7,22 @@
 <body>
     <div id="salvoApp">
         <center>
-            <h2> {{ viewer.email }} - Ship Locations!</h2>
-            <p> {{ viewer.email }} vs {{ enemy.email }} </p>
+            <h2> {{ viewer.player.email }} - Ship Locations!</h2>
+            <p> {{ viewer.player.email }} vs {{ enemy.player.email }} </p>
+            <h4> My Board</h4>
             <table>
                 <tr v-for="indexV in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
-                    <td v-for="indexH in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexV -1) + indexH" v-bind:style="'background-color: ' + select(grid.charAt(indexV -1) + indexH)"></td>
+                    <td v-for="indexH in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)"></td>
+                </tr>
+            </table>
+            <h4> My Shoots! </h4>
+            <table>
+                <tr v-for="indexV in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
+                    <td v-for="indexH in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + myShoots(grid.charAt(indexH -1) + indexV)"></td>
                 </tr>
             </table>
         </center>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- Carga de codigo en Vue.js -->
     <script src="./js/game.js"></script>

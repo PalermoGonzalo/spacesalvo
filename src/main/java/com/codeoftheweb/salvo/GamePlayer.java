@@ -66,12 +66,6 @@ public class GamePlayer {
         Map<String, Object> gamePlayerDto = new LinkedHashMap<>();
         gamePlayerDto.put("id", this.getId());
         gamePlayerDto.put("player", player.getDto());
-        List<Map<String, Object>> shipsDto =
-               this.getShips()
-               .stream()
-               .map(ships -> ships.getDto())
-               .collect(Collectors.toList());
-        gamePlayerDto.put("ships", shipsDto);
         List<Map<String, Object>> salvoDto =
                 this.getSalvo()
                         .stream()
