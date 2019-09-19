@@ -6,51 +6,53 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
-public class Game {
+public class Scores {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
-    // En el mappedBy hay que utilizar el nombre de la referencia utilizada a Game en la clase GamePlayers
-    private Set<GamePlayer> gamePlayers;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="fk_player")
+    private Player player;
 
-    @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
-    // En el mappedBy hay que utilizar el nombre de la referencia utilizada a Game en la clase GamePlayers
-    private Set<Scores> scores;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="fk_game")
+    private Game game;
 
-    private LocalDateTime creationDate;
+    private int score;
 
-    public Game() {
+    private LocalDateTime finishDate;
+
+    public Scores(Player player, Game game) {
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
-        this.creationDate = dateTime;
-        this.gamePlayers = new HashSet<>();
+        this.finishDate = dateTime;
+        this.game = game;
+        this.player = player;
     }
-
-    public Game(long hours) {
+/*
+    public Scores(long hours) {
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
         this.creationDate = dateTime.plusHours(hours);
         this.gamePlayers = new HashSet<>();
     }
-
+*/
     public long getId(){
         return id;
     }
 
-    public String getCreationDate() {
-        return creationDate.toString().replace("T", " ");
+    public String getFinishDate() {
+        return finishDate.toString().replace("T", " ");
     }
 
     @JsonIgnore
-    public Set<GamePlayer> getGamePlayers(){
-        return gamePlayers;
-    }
+    public Game getGames(){return game;}
 
+    @JsonIgnore
+    public Player getPlayers(){return player;}
+/*
     public Map<String, Object> getDto(){
         Map<String, Object> gameDto = new LinkedHashMap<>();
         gameDto.put("id", this.id);
@@ -64,5 +66,5 @@ public class Game {
         gameDto.put("gamePlayers", gamePlayerDto);
         return gameDto;
     }
-
+*/
 }
