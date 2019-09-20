@@ -5,10 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Player {
@@ -37,6 +35,9 @@ public class Player {
     }
 
     public Long getId(){return id;}
+
+    @JsonIgnore
+    public Set<Scores> getScores(){return scores;}
 
     @JsonIgnore
     public Set<GamePlayer> getGamePlayers(){return gamePlayers;}

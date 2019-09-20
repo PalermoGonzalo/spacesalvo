@@ -21,7 +21,6 @@ public class Game {
     private Set<GamePlayer> gamePlayers;
 
     @OneToMany(mappedBy="game", fetch = FetchType.EAGER)
-    // En el mappedBy hay que utilizar el nombre de la referencia utilizada a Game en la clase GamePlayers
     private Set<Scores> scores;
 
     private LocalDateTime creationDate;
@@ -51,6 +50,11 @@ public class Game {
         return gamePlayers;
     }
 
+    @JsonIgnore
+    public Set<Scores> getScores(){
+        return scores;
+    }
+
     public Map<String, Object> getDto(){
         Map<String, Object> gameDto = new LinkedHashMap<>();
         gameDto.put("id", this.id);
@@ -64,5 +68,4 @@ public class Game {
         gameDto.put("gamePlayers", gamePlayerDto);
         return gameDto;
     }
-
 }

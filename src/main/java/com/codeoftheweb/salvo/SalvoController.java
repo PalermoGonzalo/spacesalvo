@@ -45,9 +45,7 @@ public class SalvoController {
     public Map<String, Object> getGame(@PathVariable("id") long id){
         GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
         Map<String, Object> dto = gamePlayer.getGame().getDto();
-
         dto.put("ships", gamePlayer.getShips().stream().map(ship -> ship.getDto()));
-
         return dto;
     }
 

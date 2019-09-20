@@ -61,7 +61,6 @@ public class GamePlayer {
 
     public Set<Salvo> getSalvo(){ return salvo;}
 
-    //public Date getJoinDate(){return joinDate;}
     public Map<String, Object> getDto(){
         Map<String, Object> gamePlayerDto = new LinkedHashMap<>();
         gamePlayerDto.put("id", this.getId());
@@ -72,6 +71,10 @@ public class GamePlayer {
                         .map(salvo -> salvo.getDto())
                         .collect(Collectors.toList());
         gamePlayerDto.put("salvo", salvoDto);
+        Scores scores = new Scores(this.getGame());
+        List<Map<String, Object>> scoreDto =
+                Collections.singletonList(scores.getDto());
+        gamePlayerDto.put("score", scores.getDto());
         return gamePlayerDto;
     }
 }

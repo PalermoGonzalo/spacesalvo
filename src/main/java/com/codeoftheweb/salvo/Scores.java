@@ -6,6 +6,10 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 public class Scores {
@@ -22,26 +26,29 @@ public class Scores {
     @JoinColumn(name="fk_game")
     private Game game;
 
-    private int score;
+    private double score;
 
     private LocalDateTime finishDate;
 
-    public Scores(Player player, Game game) {
+    public Scores(){};
+
+    public Scores(Game game){
+        this.game = game;
+    }
+
+    public Scores(Player player, Game game, double score) {
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
         this.finishDate = dateTime;
         this.game = game;
         this.player = player;
+        this.score = score;
     }
-/*
-    public Scores(long hours) {
-        LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
-        this.creationDate = dateTime.plusHours(hours);
-        this.gamePlayers = new HashSet<>();
-    }
-*/
+
     public long getId(){
         return id;
     }
+
+    public double getScore(){ return score; }
 
     public String getFinishDate() {
         return finishDate.toString().replace("T", " ");
@@ -52,19 +59,12 @@ public class Scores {
 
     @JsonIgnore
     public Player getPlayers(){return player;}
-/*
-    public Map<String, Object> getDto(){
-        Map<String, Object> gameDto = new LinkedHashMap<>();
-        gameDto.put("id", this.id);
-        gameDto.put("created", this.creationDate);
 
-        List<Map<String, Object>> gamePlayerDto =
-                this.getGamePlayers()
-                .stream()
-                .map(gamePlayer -> gamePlayer.getDto())
-                .collect(Collectors.toList());
-        gameDto.put("gamePlayers", gamePlayerDto);
-        return gameDto;
+    public Map<String, Object> getDto(){
+        Map<String, Object> scoresDto = new LinkedHashMap<>();
+        scoresDto.put("id", this.getId());
+        scoresDto.put("score", this.getScore());
+        //scoresDto.put("finishDate", this.getFinishDate());
+        return scoresDto;
     }
-*/
 }
