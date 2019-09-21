@@ -66,6 +66,12 @@ public class Game {
                 .map(gamePlayer -> gamePlayer.getDto())
                 .collect(Collectors.toList());
         gameDto.put("gamePlayers", gamePlayerDto);
+        List<Map<String, Object>> scoresDto =
+                this.getScores()
+                .stream()
+                .map(scores -> scores.getDto())
+                .collect(Collectors.toList());
+        gameDto.put("scores", scoresDto);
         return gameDto;
     }
 }

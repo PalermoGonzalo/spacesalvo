@@ -32,10 +32,6 @@ public class Scores {
 
     public Scores(){};
 
-    public Scores(Game game){
-        this.game = game;
-    }
-
     public Scores(Player player, Game game, double score) {
         LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.UTC);
         this.finishDate = dateTime;
@@ -64,7 +60,9 @@ public class Scores {
         Map<String, Object> scoresDto = new LinkedHashMap<>();
         scoresDto.put("id", this.getId());
         scoresDto.put("score", this.getScore());
-        //scoresDto.put("finishDate", this.getFinishDate());
+        scoresDto.put("player", this.getPlayers().getUserName());
+        scoresDto.put("game", this.getGames().getId());
+        scoresDto.put("finishDate", this.getFinishDate());
         return scoresDto;
     }
 }

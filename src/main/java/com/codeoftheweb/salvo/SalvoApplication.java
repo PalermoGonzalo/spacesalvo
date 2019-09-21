@@ -90,6 +90,13 @@ public class SalvoApplication {
 			Scores sc4 = new Scores( player2, game2, 1);
 			Scores sc5 = new Scores( player1, game3, 0.5);
 			Scores sc6 = new Scores( player3, game3, 0.5);
+
+			scoresRepository.save(sc1);
+			scoresRepository.save(sc2);
+			scoresRepository.save(sc3);
+			scoresRepository.save(sc4);
+			scoresRepository.save(sc5);
+			scoresRepository.save(sc6);
 		};
 	}
 

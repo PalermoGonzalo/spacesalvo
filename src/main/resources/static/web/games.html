@@ -7,7 +7,7 @@
 <body>
     <div id="salvoApp">
         <ul>
-            <li v-for="game in games"> {{ game.created }} - {{ game.gamePlayers[0].player.email }} vs. {{ game.gamePlayers[0].player.email }} </li>
+            <li v-for="player in players"> {{ player }} </li>
         </ul>
     </div>
 
