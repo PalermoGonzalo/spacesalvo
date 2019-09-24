@@ -16,6 +16,7 @@ public class Player {
     private long id;
     //@Column(name = "usuario")
     private String userName;
+    private String password;
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers;
@@ -46,6 +47,7 @@ public class Player {
         Map<String, Object> playerDto = new LinkedHashMap<>();
         playerDto.put("id", this.getId());
         playerDto.put("email", this.getUserName());
+        //playerDto.put("wins", this.scores.stream().filter(score -> score.getScore() == 1).count());
         return playerDto;
     }
 }
