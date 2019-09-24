@@ -4,6 +4,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.persistence.ElementCollection;
 import java.util.ArrayList;
@@ -26,9 +32,9 @@ public class SalvoApplication {
 		ScoresRepository scoresRepository,
 		GamePlayerRepository gamePlayerRepository) {
 		return (args) -> {
-			Player player1 = new Player("pedro@gmail.com");
-			Player player2 = new Player("mateo@gmail.com");
-			Player player3 = new Player("marcos@gmail.com");
+			Player player1 = new Player("pedro","pedro@gmail.com", "ASD123");
+			Player player2 = new Player("mateo","mateo@gmail.com","DSA321");
+			Player player3 = new Player("marcos","marcos@gmail.com", "POW987");
 
 			playerRepository.save(player1);
 			playerRepository.save(player2);
@@ -100,4 +106,22 @@ public class SalvoApplication {
 		};
 	}
 
+}
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+	@Autowired
+	PlayerRepository playerRepository;
+
+	@Override
+	public void init(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userName-> {
+			Player player = playerRepository.findByEmail(userName);
+			if (player != null) {
+				return new Player(player.getEmail(), player.getPassword(), AuthorityUtils.createAuthorityList("USER"));
+			} else {
+				throw new UsernameNotFoundException("Unknown user: " + userName);
+			}
+		});
+	}
 }
