@@ -42,6 +42,10 @@ public class Player {
 
     public String getPassword() { return password; }
 
+    public void setPassword(String pass) {
+        this.password  = pass;
+    }
+
     public Long getId(){return id;}
 
     @JsonIgnore
