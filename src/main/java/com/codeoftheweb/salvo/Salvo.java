@@ -1,6 +1,10 @@
 package com.codeoftheweb.salvo;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -57,5 +61,25 @@ public class Salvo {
         salvoDto.put("locations", this.getLocations());
         return salvoDto;
     }
+}
 
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/**").hasAuthority("USER")
+                .and()
+                .formLogin();
+
+        http.formLogin()
+                .usernameParameter("name")
+                .passwordParameter("pwd")
+                .loginPage("/login");
+
+        http.logout().logoutUrl("/logout");
+    }
 }

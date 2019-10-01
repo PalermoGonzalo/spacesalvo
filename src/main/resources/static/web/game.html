@@ -10,7 +10,7 @@
             <h2> {{ viewer.player.email }} - Ship Locations!</h2>
             <p> {{ viewer.player.email }} vs {{ enemy.player.email }} </p>
             <h4> My Board</h4>
-            <table>
+        <table>
                 <tr v-for="indexV in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
                     <td v-for="indexH in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)"></td>
                 </tr>
