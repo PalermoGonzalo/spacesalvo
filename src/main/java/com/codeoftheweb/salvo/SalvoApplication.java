@@ -8,13 +8,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import javax.persistence.ElementCollection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @SpringBootApplication
@@ -38,9 +46,9 @@ public class SalvoApplication {
 		ScoresRepository scoresRepository,
 		GamePlayerRepository gamePlayerRepository) {
 		return (args) -> {
-			Player player1 = new Player("pedro","pedro@gmail.com", "ASD123");
-			Player player2 = new Player("mateo","mateo@gmail.com","DSA321");
-			Player player3 = new Player("marcos","marcos@gmail.com", "POW987");
+			Player player1 = new Player("pedro","pedro@gmail.com",  passwordEncoder().encode("ASD123"));
+			Player player2 = new Player("mateo","mateo@gmail.com", passwordEncoder().encode("DSA321"));
+			Player player3 = new Player("marcos","marcos@gmail.com", passwordEncoder().encode("POW987"));
 
 			playerRepository.save(player1);
 			playerRepository.save(player2);
@@ -124,10 +132,44 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 		auth.userDetailsService(userName-> {
 			Player player = playerRepository.findByEmail(userName);
 			if (player != null){
-				return new User(player.getUserName(), player.getEmail(), AuthorityUtils.createAuthorityList("USER"));
+				return new User(player.getUserName(), player.getPassword(), AuthorityUtils.createAuthorityList("USER"));
 			} else {
 				throw new UsernameNotFoundException("Unknown user: " + userName);
 			}
 		});
+	}
+}
+
+
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+				.antMatchers("/web/games.html", "/web/js/games.js", "/api/scores", "/web/login.html").permitAll()
+				.antMatchers("/admin/**").hasAuthority("ADMIN")
+				.antMatchers("/**").hasAuthority("USER")
+				.and()
+				.formLogin()
+				.loginPage("/web/login.html")
+				.usernameParameter("userName")
+				.passwordParameter("password")
+				.successHandler((req, res, auth) -> clearAuthenticationAttributes(req))
+				.failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+				//.defaultSuccessHandler("/web/games.html")
+				.and()
+				.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+				.and()
+				.logout().logoutUrl("/logout")
+				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+	}
+
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+		}
 	}
 }
