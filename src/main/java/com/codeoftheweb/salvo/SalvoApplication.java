@@ -148,22 +148,27 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/web/games.html", "/web/js/games.js", "/api/scores", "/web/login.html").permitAll()
-				.antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/web/games.html", "/web/js/games.js", "/api/scores", "/web/login.html").permitAll()
+				.antMatchers("/rest/**").hasAuthority("ADMIN")
 				.antMatchers("/**").hasAuthority("USER")
-				.and()
-				.formLogin()
-				.loginPage("/web/login.html")
-				.usernameParameter("userName")
-				.passwordParameter("password")
-				.successHandler((req, res, auth) -> clearAuthenticationAttributes(req))
+				//.anyRequest().permitAll()
+                .and()
+                .formLogin()
+				.usernameParameter("username")
+                .passwordParameter("password")
+                .loginPage("/api/login")
+                .successHandler((req, res, auth) -> clearAuthenticationAttributes(req))
 				.failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-				//.defaultSuccessHandler("/web/games.html")
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
 				.and()
-				.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-				.and()
-				.logout().logoutUrl("/logout")
-				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+                .logout()
+                .logoutUrl("/api/logout")
+				.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                .and()
+                .csrf()
+                .disable();
 	}
 
 	private void clearAuthenticationAttributes(HttpServletRequest request) {
