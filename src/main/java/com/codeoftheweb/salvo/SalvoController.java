@@ -3,9 +3,12 @@ package com.codeoftheweb.salvo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,6 +32,22 @@ public class SalvoController {
     private ScoresRepository scoresRepository;
 
     @RequestMapping("/games")
+    public ResponseEntity<Map<String, Object>> games(Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("player", "null");
+        } else {
+            Player player = playerRepository.findByEmail(authentication.getName());
+            response.put("player", player.getDto());
+        }
+
+        List<Map<String, Object>> gamesdto = gameRepository.findAll().stream().map(game -> game.getDto()).collect(Collectors.toList());
+        response.put("games", gamesdto);
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+    }
+
+    /*
     public List<Object> findAllGames(){
         return gameRepository
                 .findAll()
@@ -36,7 +55,7 @@ public class SalvoController {
                 .map(game -> game.getDto())
                 .collect(Collectors.toList());
     }
-
+    */
     @RequestMapping("/players")
     public List<Object> findAllPlayers(){
         return playerRepository
@@ -49,6 +68,7 @@ public class SalvoController {
     @RequestMapping("/game_view/{id}")
     public Map<String, Object> getGame(@PathVariable("id") long id){
         GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
+
         Map<String, Object> dto = gamePlayer.getGame().getDto();
         dto.put("ships", gamePlayer.getShips().stream().map(ship -> ship.getDto()));
         return dto;
