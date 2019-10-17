@@ -2,6 +2,11 @@ var app = new Vue({
     el: "#salvoApp",
     data: {
         scores:"",
+        showLogin:1,
+        showLogout:0,
+        form:{email:"", password:""},
+        email:"",
+        password:"",
         players: []
     },
      created() {
@@ -56,7 +61,31 @@ var app = new Vue({
                          });
                      return myJson;
                      });
-                 }
+                 },
+             login: function(){
+                console.log(this.form.email);
+                console.log(this.form.password);
+                $.post("/api/login", { username: this.form.email, password: this.form.password })
+                    .done(function() {
+                        console.log("logged in!");
+                        app.showLogin = 0;
+                        app.showLogout = 1;
+                    });
+             },
+             logout: function(){
+                 $.post("/api/logout")
+                     .then(function() {
+                         app.showLogin = 1;
+                         app.showLogout = 0;
+                         alert("Logged out");
+                     });
+             },
+             checkExistUser: function(event){
+                this.email = event.target.value;
+             },
+             checkExistPass: function(event){
+                this.password = event.target.value;
+             },
      },
      computed:{
      }

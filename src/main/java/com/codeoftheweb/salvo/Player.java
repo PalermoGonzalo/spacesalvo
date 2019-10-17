@@ -27,6 +27,13 @@ public class Player {
 
     public Player() { }
 
+    public Player(String email, String password) {
+        //this.userName = user;
+        this.email = email;
+        this.password = password;
+        this.gamePlayers = new HashSet<>();
+    }
+
     public Player(String user, String email, String password) {
         this.userName = user;
         this.email = email;
@@ -53,7 +60,7 @@ public class Player {
     public Map<String, Object> getDto(){
         Map<String, Object> playerDto = new LinkedHashMap<>();
         playerDto.put("id", this.getId());
-        playerDto.put("nickname", this.getUserName());
+        //playerDto.put("nickname", this.getUserName());
         playerDto.put("user", this.getEmail());
         //playerDto.put("password", this.getPassword());
         //playerDto.put("wins", this.scores.stream().filter(score -> score.getScore() == 1).count());

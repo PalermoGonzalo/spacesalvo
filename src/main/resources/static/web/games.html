@@ -6,6 +6,20 @@
 </head>
 <body>
     <div id="salvoApp">
+        <div>
+            <div v-show="showLogin">
+                <modal>
+                    <span>User Name</span>
+                    <input @input="checkExistUser($event)" type="text" v-model="form.email">
+                    <span>Password</span>
+                    <input @input="checkExistPass($event)" type="password" v-model="form.password">
+                    <button v-on:click="login()"> Login </button>
+                </modal>
+            </div>
+            <div v-show="showLogout">
+                <button v-on:click="logout()"> Logout </button>
+            </div>
+        </div>
         <center>
             <table>
                 <tr>

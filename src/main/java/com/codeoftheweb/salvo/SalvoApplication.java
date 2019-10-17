@@ -46,9 +46,13 @@ public class SalvoApplication {
 		ScoresRepository scoresRepository,
 		GamePlayerRepository gamePlayerRepository) {
 		return (args) -> {
-			Player player1 = new Player("pedro","pedro@gmail.com",  passwordEncoder().encode("ASD123"));
-			Player player2 = new Player("mateo","mateo@gmail.com", passwordEncoder().encode("DSA321"));
-			Player player3 = new Player("marcos","marcos@gmail.com", passwordEncoder().encode("POW987"));
+			//Player player1 = new Player("pedro","pedro@gmail.com",  passwordEncoder().encode("ASD123"));
+			//Player player2 = new Player("mateo","mateo@gmail.com", passwordEncoder().encode("DSA321"));
+			//Player player3 = new Player("marcos","marcos@gmail.com", passwordEncoder().encode("POW987"));
+
+			Player player1 = new Player("pedro@gmail.com",  passwordEncoder().encode("ASD123"));
+			Player player2 = new Player("mateo@gmail.com", passwordEncoder().encode("DSA321"));
+			Player player3 = new Player("marcos@gmail.com", passwordEncoder().encode("POW987"));
 
 			playerRepository.save(player1);
 			playerRepository.save(player2);

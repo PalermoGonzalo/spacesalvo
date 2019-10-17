@@ -60,7 +60,7 @@ public class Scores {
         Map<String, Object> scoresDto = new LinkedHashMap<>();
         scoresDto.put("id", this.getId());
         scoresDto.put("score", this.getScore());
-        scoresDto.put("player", this.getPlayers().getUserName());
+        scoresDto.put("player", this.getPlayers().getEmail());
         scoresDto.put("game", this.getGames().getId());
         scoresDto.put("finishDate", this.getFinishDate());
         return scoresDto;
