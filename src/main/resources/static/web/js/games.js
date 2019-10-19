@@ -7,6 +7,7 @@ var app = new Vue({
         form:{email:"", password:""},
         email:"",
         password:"",
+        showModal: false,
         players: []
     },
      created() {
