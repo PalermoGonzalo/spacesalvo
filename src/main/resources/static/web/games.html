@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-    <div id="salvoApp">
+    <div id="salvoApp" v-bind:style=" { height: currentHeight } ">
         <div class="navbar bg-dark navbar-dark justify-content-end">
             <div v-show="showLogin">
-                <button class="btn btn-default" data-toggle="modal" data-target="#Articulo" v-on:click="showModal = true"> Login </button>
+                <button class="btn btn-default" data-toggle="modal" data-target="#Loggin" v-on:click="showModal = true"> Login </button>
             </div>
             <div v-show="!showLogin">
                 <button class="btn btn-default" v-on:click="logout()"> Logout </button>
@@ -27,7 +27,7 @@
                         <th>Win</th>
                         <th>Ties</th>
                         <th>Lost</th>
-                        <th>Total Score</th>
+                        <th>Score</th>
                     </tr>
                     <tr v-for="player in players">
                         <td> {{ player.player }} </td>
@@ -39,29 +39,51 @@
                 </table>
             </div>
         </div>
-
-        <div id="Articulo" v-if="showModal" v-on:close="showModal = false" class="modal fade" role="dialog">
+        <div v-show="showLogin">
+            <div class="row justify-content-center">
+                <div class="col-md-4 col-md-offset-4">
+                    <table class="table">
+                        <tr>
+                            <th>Date</th>
+                            <th>Player 1</th>
+                            <th>Player 2</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr v-for="game in games">
+                            <td> {{ game.created }} </td>
+                            <td style="text-align: center;"> {{ game.gamePlayers[0].player.user }} </td>
+                            <td style="text-align: center;"> {{ game.gamePlayers[0].player.user }} </td>
+                            <td style="text-align: center;"> {{ game.created }} </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="Loggin" v-if="showModal" v-on:close="showModal = false" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title"> Login! </h4>
+                        <h4 class="modal-title" v-show="!register"> Login! </h4>
+                        <h4 class="modal-title" v-show="register"> Registration </h4>
                     </div>
                     <div class="modal-body">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">User Name</span>
+                                <span class="input-group-text">Username</span>
                             </div>
-                            <input class="form-control" @input="checkExistUser($event)" type="text" v-model="form.email">
+                            <input class="form-control" @input="checkExistUser($event)" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" v-model="form.email" required>
                         </div>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Password</span>
                             </div>
-                            <input class="form-control" @input="checkExistPass($event)" type="password" v-model="form.password">
+                            <input class="form-control" @input="checkExistPass($event)" type="password" v-model="form.password" required>
                         </div>
+                        <p v-on:click="setRegistration" v-show="!register"><a href="#"> Not registered?</a></p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" v-on:click="login()" data-dismiss="modal">Login</button>
+                        <button type="button" class="btn btn-default" v-on:click="login()" data-dismiss="modal" v-show="!register" >Login</button>
+                        <button type="button" class="btn btn-default" v-on:click="registration()" data-dismiss="modal" v-show="register" >Register</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -70,7 +92,8 @@
     </div>
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
     <!-- Popper JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <!-- Latest compiled JavaScript -->
@@ -85,6 +108,7 @@
 <style>
     #salvoApp {
         background-color: #AAAAAA;
+        height: 99vh;
     }
 
     #title {

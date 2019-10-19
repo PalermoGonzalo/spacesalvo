@@ -3,11 +3,12 @@ var app = new Vue({
     data: {
         scores:"",
         showLogin:1,
-        showLogout:0,
+        register:0,
         form:{email:"", password:""},
         email:"",
         password:"",
         showModal: false,
+        games: [],
         players: []
     },
      created() {
@@ -64,20 +65,51 @@ var app = new Vue({
                      });
                  },
              login: function(){
-                console.log(this.form.email);
-                console.log(this.form.password);
+                if(this.form.email == "" || this.form.password == ""){
+                    alert("Username or password missed!");
+                    return;
+                }
                 $.post("/api/login", { username: this.form.email, password: this.form.password })
                     .done(function() {
-                        console.log("logged in!");
+                        //console.log("logged in!");
                         app.showLogin = 0;
-                        app.showLogout = 1;
+                        app.loadGames();
+                    })
+                    .fail(function(){
+                        alert("Username or password error!");
                     });
+             },
+             loadGames: function(){
+                fetch('/api/games')
+                  .then(function(response) {
+                      return response.json();
+                  })
+                  .then(function(myJson) {
+                      console.log(myJson);
+                      app.games = myJson;
+                      return myJson;
+                  });
+             },
+             registration: function(){
+                if(this.form.email == "" || this.form.password == ""){
+                    alert("Username or password missed!");
+                    return;
+                }
+                 $.post("/api/players", { username: this.form.email, password: this.form.password })
+                     .done(function() {
+                         alert("you have register succesfully!")
+                         app.form.email = "";
+                         app.form.password = "";
+                         app.register = 0;
+                     })
+                     .fail(function(){
+                        alert("User already exists!");
+                     });
              },
              logout: function(){
                  $.post("/api/logout")
                      .then(function() {
                          app.showLogin = 1;
-                         app.showLogout = 0;
                          alert("Logged out");
                      });
              },
@@ -87,7 +119,13 @@ var app = new Vue({
              checkExistPass: function(event){
                 this.password = event.target.value;
              },
+             setRegistration: function(){
+                this.register = 1;
+             }
      },
      computed:{
+        currentHeight: function(){
+            return window.innerHeight;
+        }
      }
 });
