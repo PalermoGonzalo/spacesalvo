@@ -10,12 +10,19 @@
 </head>
 <body>
     <div id="salvoApp" v-bind:style=" { height: currentHeight } ">
-        <div class="navbar bg-dark navbar-dark justify-content-end">
-            <div v-show="showLogin">
-                <button class="btn btn-default" data-toggle="modal" data-target="#Loggin" v-on:click="showModal = true"> Login </button>
+        <div class="navbar bg-dark navbar-dark">
+            <div class="justify-content-start">
+                <div  v-show="!showLogin">
+                    <h4 style="color: white"> Welcome back {{ email }}! </h4>
+                </div>
             </div>
-            <div v-show="!showLogin">
-                <button class="btn btn-default" v-on:click="logout()"> Logout </button>
+            <div class="justify-content-end">
+                <div v-show="showLogin">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#Loggin" v-on:click="showModal = true"> Login </button>
+                </div>
+                <div v-show="!showLogin">
+                    <button class="btn btn-default" v-on:click="logout()"> Logout </button>
+                </div>
             </div>
         </div>
 
@@ -39,9 +46,9 @@
                 </table>
             </div>
         </div>
-        <div v-show="showLogin">
+        <div v-show="!showLogin">
             <div class="row justify-content-center">
-                <div class="col-md-4 col-md-offset-4">
+                <div class="col-md-8 col-md-offset-2">
                     <table class="table">
                         <tr>
                             <th>Date</th>
@@ -49,11 +56,11 @@
                             <th>Player 2</th>
                             <th>Status</th>
                         </tr>
-                        <tr v-for="game in games">
+                        <tr v-for="game in games.games">
                             <td> {{ game.created }} </td>
-                            <td style="text-align: center;"> {{ game.gamePlayers[0].player.user }} </td>
-                            <td style="text-align: center;"> {{ game.gamePlayers[0].player.user }} </td>
-                            <td style="text-align: center;"> {{ game.created }} </td>
+                            <td> {{ game.gamePlayers[0].player.user }} </td>
+                            <td> {{ game.gamePlayers[1].player.user }} </td>
+                            <td style="text-align: center;">  </td>
                         </tr>
                     </table>
                 </div>
