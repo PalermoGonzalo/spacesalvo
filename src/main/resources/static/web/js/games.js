@@ -12,10 +12,10 @@ var app = new Vue({
         players: []
     },
      created() {
-         this.schedule();
+         this.loadScores();
      },
      methods: {
-             schedule: function() {
+             loadScores: function() {
                  //let that = this;
                  fetch('/api/scores')
                      .then(function(response) {
@@ -65,6 +65,7 @@ var app = new Vue({
                      });
                  },
              login: function(){
+                let that = this;
                 if(this.form.email == "" || this.form.password == ""){
                     alert("Username or password missed!");
                     return;
@@ -72,8 +73,8 @@ var app = new Vue({
                 $.post("/api/login", { username: this.form.email, password: this.form.password })
                     .done(function() {
                         //console.log("logged in!");
-                        app.showLogin = 0;
-                        app.loadGames();
+                        that.loadGames();
+                        that.showLogin = 0;
                     })
                     .fail(function(){
                         alert("Username or password error!");
@@ -86,7 +87,7 @@ var app = new Vue({
                   })
                   .then(function(myJson) {
                       console.log(myJson);
-                      app.games = myJson;
+                      this.app.games = myJson;
                       return myJson;
                   });
              },
