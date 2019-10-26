@@ -19,18 +19,22 @@ var app = new Vue({
      },
      methods: {
              loadGames: function() {
-                 var url = new URL("http://localhost:8080/api/game_view/1");
+                 var url = new URL("http://localhost:8080/api/game_view/" + this.selectedPlayer);
                  fetch(url)
                      .then(function(response) {
                          return response.json();
                      })
                      .then(function(myJson) {
-                         this.app.games = myJson;
-                         this.app.ships = myJson.ships;
-                         this.app.ships.forEach(function(ship){
-                             this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
-                         });
-                         this.app.loadPlayers();
+                        if(myJson.error){
+                            alert(myJson.error);
+                        }else{
+                             this.app.games = myJson;
+                             this.app.ships = myJson.ships;
+                             this.app.ships.forEach(function(ship){
+                                 this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
+                             });
+                             this.app.loadPlayers();
+                         }
                          return myJson;
                      });
              },
@@ -51,7 +55,7 @@ var app = new Vue({
                 });
              },
              select: function(id){
-                let ret = "";
+                let ret = "white";
                 this.enemySalvo.forEach(function(enemySalvos){
                     if(enemySalvos.indexOf(id) != -1){
                         ret = "blue";
@@ -64,31 +68,30 @@ var app = new Vue({
                         ret = "black";
                     }
                 }
-                if( ret == ""){
-                    return "white";
-                }else{
-                    return ret;
-                }
+
+                return ret;
              },
              myShoots: function(id){
                  let ret = "";
-                 this.localSalvo.forEach(function(localSalvos){
-                     if(localSalvos.indexOf(id) != -1){
-                         ret = "blue";
-                     }
-                 });
-                 /*
-                 if( this.shipsLocations.indexOf(id) != -1){
-                     if(ret == "blue"){
-                         ret = "red";
+                 if(!this.localSalvo){
+                     this.localSalvo.forEach(function(localSalvos){
+                         if(localSalvos.indexOf(id) != -1){
+                             ret = "blue";
+                         }
+                     });
+                     /*
+                     if( this.shipsLocations.indexOf(id) != -1){
+                         if(ret == "blue"){
+                             ret = "red";
+                         }else{
+                             ret = "black";
+                         }
+                     }*/
+                     if( ret == ""){
+                         return "white";
                      }else{
-                         ret = "black";
+                         return ret;
                      }
-                 }*/
-                 if( ret == ""){
-                     return "white";
-                 }else{
-                     return ret;
                  }
               }
      }
