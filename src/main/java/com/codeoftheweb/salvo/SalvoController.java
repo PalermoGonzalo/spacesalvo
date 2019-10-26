@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo;
 
+import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,15 +48,6 @@ public class SalvoController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
     }
 
-    /*
-    public List<Object> findAllGames(){
-        return gameRepository
-                .findAll()
-                .stream()
-                .map(game -> game.getDto())
-                .collect(Collectors.toList());
-    }
-    */
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(
             @RequestParam String username,
@@ -72,23 +64,26 @@ public class SalvoController {
         playerRepository.save(new Player(username, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    /*
-    public List<Object> findAllPlayers(){
-        return playerRepository
-                .findAll()
-                .stream()
-                .map(player -> player.getDto())
-                .collect(Collectors.toList());
-    }
-    */
 
     @RequestMapping("/game_view/{id}")
-    public Map<String, Object> getGame(@PathVariable("id") long id){
-        GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
+    public ResponseEntity<Map<String, Object>> getGame(@PathVariable("id") long id, Authentication authentication){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "Debe estar logueado para acceder");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else {
+            Player player = playerRepository.findByEmail(authentication.getName());
+            if (id != player.getId()) {
+                response.put("error", "Usted no pertenece a este juego");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            } else {
+                GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
 
-        Map<String, Object> dto = gamePlayer.getGame().getDto();
-        dto.put("ships", gamePlayer.getShips().stream().map(ship -> ship.getDto()));
-        return dto;
+                response = gamePlayer.getGame().getDto();
+                response.put("ships", gamePlayer.getShips().stream().map(ship -> ship.getDto()));
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+            }
+        }
     }
 
     @RequestMapping("/scores")
