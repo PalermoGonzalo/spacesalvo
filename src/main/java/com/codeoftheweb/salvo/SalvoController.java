@@ -32,7 +32,7 @@ public class SalvoController {
     @Autowired
     private ScoresRepository scoresRepository;
 
-    @RequestMapping("/games")
+    @RequestMapping(path = "/games", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> games(Authentication authentication) {
         Map<String, Object> response = new HashMap<>();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
@@ -46,6 +46,64 @@ public class SalvoController {
         response.put("games", gamesdto);
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(path = "/games", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> newGame(Authentication authentication) {
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("gameId", "null");
+        } else {
+            Player player = playerRepository.findByEmail(authentication.getName());
+            Game newGame = gameRepository.save(new Game());
+            GamePlayer newGamePlayer = gamePlayerRepository.save(new GamePlayer(player, newGame));
+            response.put("gamePlayerId", newGamePlayer.getId());
+        }
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(path = "/games/{id}/players", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getGamePlayers(@PathVariable("id") long id, Authentication authentication){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "You must be log first!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else{
+            Game game = gameRepository.findById(id).orElse(null);
+            Map<String, Object> gameDto = new HashMap<>();
+            response.put("id", game.getId());
+            response.put("created", game.getCreationDate());
+            response.put("Players", game.getGamePlayers().stream());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(path = "/games/{id}/players", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> joinGame(@PathVariable("id") long id, Authentication authentication){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "You must be log to join this game!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else{
+            Game game = gameRepository.findById(id).orElse(null);
+            if(game != null){
+                if(game.getGamePlayers().size() > 1){
+                    response.put("error", "Game is full!");
+                    return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+                }
+                Player player = playerRepository.findByEmail(authentication.getName());
+                if(game.getGamePlayers().stream().anyMatch(gp -> gp.getPlayer().getId() == player.getId())){
+                    response.put("error", "You are already joined to this game!");
+                    return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+                }
+                GamePlayer newGamePlayer = gamePlayerRepository.save(new GamePlayer(player, game));
+                response.put("gpId", newGamePlayer.getId());
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+            }else{
+                response.put("error", "Not such game");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+            }
+        }
     }
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)
@@ -65,7 +123,7 @@ public class SalvoController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @RequestMapping("/game_view/{id}")
+    @RequestMapping(path = "/game_view/{id}", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getGame(@PathVariable("id") long id, Authentication authentication){
         Map<String, Object> response = new HashMap<>();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
@@ -103,22 +161,4 @@ public class SalvoController {
                 .map(ship -> ship.getDto())
                 .collect(Collectors.toList());
     }
-    /*
-    @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public ResponseEntity<Object> register(
-            @RequestParam String userName,
-            @RequestParam String email, @RequestParam String password) {
-
-        if (userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
-        }
-
-        if (playerRepository.findByEmail(email) !=  null) {
-            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
-        }
-
-        playerRepository.save(new Player(userName, email, passwordEncoder.encode(password)));
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-    */
 }
