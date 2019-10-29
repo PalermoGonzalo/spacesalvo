@@ -122,6 +122,21 @@ var app = new Vue({
              },
              setRegistration: function(){
                 this.register = 1;
+             },
+             newGame: function(){
+                $.post("/api/games")
+                    .then(function(response) {
+                        console.log(response)
+                        return response;
+                    });
+             },
+             joinGame: function(){
+                fetch('/api/games',{
+                    method:POST
+                })
+                .then(function(response) {
+                    console.log(response);
+                });
              }
      },
      computed:{
