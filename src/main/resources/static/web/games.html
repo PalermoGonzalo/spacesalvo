@@ -49,6 +49,7 @@
         <div v-show="!showLogin">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-md-offset-2">
+                    <button class="btn float-right m-4" v-on:click="newGame()">Start new game!</button>
                     <table class="table">
                         <tr>
                             <th>Date</th>
@@ -59,8 +60,9 @@
                         <tr v-for="game in games.games">
                             <td> {{ game.created }} </td>
                             <td> {{ game.gamePlayers[0].player.user }} </td>
-                            <td> {{ game.gamePlayers[1].player.user }} </td>
-                            <td style="text-align: center;">  </td>
+                            <td> {{ game.gamePlayers[1] && game.gamePlayers[1].player.user ? game.gamePlayers[1].player.user : "Available!" }} </td>
+                            <td> <button v-show="!game.gamePlayers[1]" class="btn" v-on:click="joinGame()"> Join now! </button>  </td>
+
                         </tr>
                     </table>
                 </div>
