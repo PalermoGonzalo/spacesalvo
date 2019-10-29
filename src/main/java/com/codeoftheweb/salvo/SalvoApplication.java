@@ -61,10 +61,12 @@ public class SalvoApplication {
 			Game game1 = new Game();
 			Game game2 = new Game(1);
 			Game game3 = new Game(2);
+			Game game4 = new Game (1);
 
 			gameRepository.save(game1);
 			gameRepository.save(game2);
 			gameRepository.save(game3);
+			gameRepository.save(game4);
 
 			GamePlayer gp1 = new GamePlayer(player1, game1);
 			GamePlayer gp2 = new GamePlayer(player2, game1);
@@ -72,6 +74,7 @@ public class SalvoApplication {
 			GamePlayer gp4 = new GamePlayer(player2, game2);
 			GamePlayer gp5 = new GamePlayer(player1, game3);
 			GamePlayer gp6 = new GamePlayer(player3, game3);
+			GamePlayer gp7 = new GamePlayer(player1, game4);
 
 			gamePlayerRepository.save(gp1);
 			gamePlayerRepository.save(gp2);
@@ -79,6 +82,7 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gp4);
 			gamePlayerRepository.save(gp5);
 			gamePlayerRepository.save(gp6);
+			gamePlayerRepository.save(gp7);
 
 			Ship sp1 = new Ship ("Destroyer", gp1, Arrays.asList("G5","G6","G7","G8"));
 			Ship sp2 = new Ship ("Submarine", gp1, Arrays.asList("D1","D2"));
