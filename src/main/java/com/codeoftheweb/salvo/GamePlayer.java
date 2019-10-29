@@ -77,4 +77,12 @@ public class GamePlayer {
         //gamePlayerDto.put("score", scores.getDto());
         return gamePlayerDto;
     }
+
+    public Map<String, Object> getSimpleDto(){
+        Map<String, Object> gamePlayerDto = new LinkedHashMap<>();
+        gamePlayerDto.put("gpid", this.getId());
+        gamePlayerDto.put("id", player.getId());
+        gamePlayerDto.put("user", player.getEmail());
+        return gamePlayerDto;
+    }
 }
