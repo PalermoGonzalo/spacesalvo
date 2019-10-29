@@ -73,11 +73,33 @@ public class SalvoController {
             Map<String, Object> gameDto = new HashMap<>();
             response.put("id", game.getId());
             response.put("created", game.getCreationDate());
-            response.put("Players", game.getGamePlayers().stream());
+            response.put("Players", game.getGamePlayers().stream().map(gp -> gp.getSimpleDto() ));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+        }
+    }
+/*
+    @RequestMapping(path = "/games/{id}/players", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getGamePlayers(@PathVariable("id") long id, Authentication authentication){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "You must be log first!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else{
+            Game game = gameRepository.findById(id).orElse(null);
+            Map<String, Object> gameDto = new HashMap<>();
+            response.put("id", game.getId());
+            response.put("created", game.getCreationDate());
+            response.put("Players", game.getGamePlayers().stream().map(gp -> getPlayerDto(gp) ));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
         }
     }
 
+    private Map<String, Object> getPlayerDto(GamePlayer gp) {
+        Map<String, Object> dto = gp.getPlayer().getDto();
+        dto.put("gpid", gp.getId());
+        return dto;
+    }
+*/
     @RequestMapping(path = "/games/{id}/players", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> joinGame(@PathVariable("id") long id, Authentication authentication){
         Map<String, Object> response = new HashMap<>();
@@ -86,23 +108,25 @@ public class SalvoController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
         }else{
             Game game = gameRepository.findById(id).orElse(null);
-            if(game != null){
-                if(game.getGamePlayers().size() > 1){
-                    response.put("error", "Game is full!");
-                    return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
-                }
-                Player player = playerRepository.findByEmail(authentication.getName());
-                if(game.getGamePlayers().stream().anyMatch(gp -> gp.getPlayer().getId() == player.getId())){
-                    response.put("error", "You are already joined to this game!");
-                    return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
-                }
-                GamePlayer newGamePlayer = gamePlayerRepository.save(new GamePlayer(player, game));
-                response.put("gpId", newGamePlayer.getId());
-                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
-            }else{
+            if(game == null) {
                 response.put("error", "Not such game");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
             }
+
+            if(game.getGamePlayers().size() > 1){
+                response.put("error", "Game is full!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+
+            Player player = playerRepository.findByEmail(authentication.getName());
+            if(game.getGamePlayers().stream().anyMatch(gp -> gp.getPlayer().getId() == player.getId())){
+                response.put("error", "You are already joined to this game!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+
+            GamePlayer newGamePlayer = gamePlayerRepository.save(new GamePlayer(player, game));
+            response.put("gpId", newGamePlayer.getId());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
         }
     }
 
