@@ -61,7 +61,7 @@
                             <td> {{ game.created }} </td>
                             <td> {{ game.gamePlayers[0].player.user }} </td>
                             <td> {{ game.gamePlayers[1] && game.gamePlayers[1].player.user ? game.gamePlayers[1].player.user : "Available!" }} </td>
-                            <td> <button v-show="!game.gamePlayers[1]" class="btn" v-on:click="joinGame()"> Join now! </button>  </td>
+                            <td> <button v-show="!game.gamePlayers[1]" class="btn" v-on:click="joinGame(game.id)"> Join now! </button>  </td>
 
                         </tr>
                     </table>

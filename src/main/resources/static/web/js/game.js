@@ -31,7 +31,7 @@ var app = new Vue({
                              this.app.games = myJson;
                              this.app.ships = myJson.ships;
                              this.app.ships.forEach(function(ship){
-                                 this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
+                                this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
                              });
                              this.app.loadPlayers();
                          }

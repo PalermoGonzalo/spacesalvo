@@ -4,13 +4,14 @@ var app = new Vue({
         scores:"",
         showLogin:1,
         register:0,
+        playerId:0,
         form:{email:"", password:""},
         email:"",
         password:"",
         showModal: false,
         games: [],
         players: []
-    },
+     },
      created() {
          this.loadScores();
      },
@@ -71,8 +72,9 @@ var app = new Vue({
                     return;
                 }
                 $.post("/api/login", { username: this.form.email, password: this.form.password })
-                    .done(function() {
+                    .done(function(response) {
                         //console.log("logged in!");
+                        console.log(response);
                         that.loadGames();
                         that.showLogin = 0;
                     })
@@ -86,7 +88,8 @@ var app = new Vue({
                       return response.json();
                   })
                   .then(function(myJson) {
-                      console.log(myJson);
+                      //console.log(myJson);
+                      this.app.playerId = myJson.player.id;
                       this.app.games = myJson;
                       return myJson;
                   });
@@ -124,19 +127,24 @@ var app = new Vue({
                 this.register = 1;
              },
              newGame: function(){
+             let that = this;
                 $.post("/api/games")
                     .then(function(response) {
-                        console.log(response)
+                        console.log(response);
+                        that.redirect(response.gamePlayerId);
                         return response;
                     });
              },
-             joinGame: function(){
-                fetch('/api/games',{
-                    method:POST
-                })
-                .then(function(response) {
-                    console.log(response);
-                });
+             redirect: function(gp){
+                window.location.href = '/web/game.html?gp=' + gp;
+             },
+             joinGame: function(id){
+             let that = this;
+                 $.post("/api/games/" + id + "/players")
+                     .then(function(response) {
+                         that.redirect(response.gpId);
+                         return response;
+                     });
              }
      },
      computed:{
