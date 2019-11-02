@@ -61,9 +61,9 @@
                             <td> {{ game.created }} </td>
                             <td> {{ game.gamePlayers[0].player.user }} </td>
                             <td> {{ game.gamePlayers[1] && game.gamePlayers[1].player.user ? game.gamePlayers[1].player.user : "Available!" }} </td>
-                            <td> <button v-show="!game.gamePlayers[1] && (game.gamePlayers[0].player.user != email)" class="btn" v-on:click="redirect(game.id)"> Join now! </button>
+                            <td> <button v-show="!game.gamePlayers[1] && (game.gamePlayers[0].player.user != email)" class="btn" v-on:click="joinGame(game.id)"> Join now! </button>
                                  <button v-show="game.gamePlayers[0].player.user == email" class="btn" v-on:click="redirect(game.gamePlayers[0].id)"> Enter </button>
-                                 <button v-show="game.gamePlayers[1] && (game.gamePlayers[1].player.user == email)" class="btn" v-on:click="joinGame(game.gamePlayers[1].id)"> Enter </button>  </td>
+                                 <button v-show="game.gamePlayers[1] && (game.gamePlayers[1].player.user == email)" class="btn" v-on:click="redirect(game.gamePlayers[1].id)"> Enter </button>  </td>
                         </tr>
                     </table>
                 </div>
