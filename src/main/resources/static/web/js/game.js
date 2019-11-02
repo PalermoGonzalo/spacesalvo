@@ -56,16 +56,20 @@ var app = new Vue({
              },
              select: function(id){
                 let ret = "white";
-                this.enemySalvo.forEach(function(enemySalvos){
-                    if(enemySalvos.indexOf(id) != -1){
-                        ret = "blue";
-                    }
-                });
-                if( this.shipsLocations.indexOf(id) != -1){
-                    if(ret == "blue"){
-                        ret = "red";
-                    }else{
-                        ret = "black";
+                if(this.enemySalvo){
+                    this.enemySalvo.forEach(function(enemySalvos){
+                        if(enemySalvos.indexOf(id) != -1){
+                            ret = "blue";
+                        }
+                    });
+                }
+                if(this.shipsLocations){
+                    if( this.shipsLocations.indexOf(id) != -1){
+                        if(ret == "blue"){
+                            ret = "red";
+                        }else{
+                            ret = "black";
+                        }
                     }
                 }
 
@@ -73,7 +77,7 @@ var app = new Vue({
              },
              myShoots: function(id){
                  let ret = "";
-                 if(!this.localSalvo){
+                 if(this.localSalvo){
                      this.localSalvo.forEach(function(localSalvos){
                          if(localSalvos.indexOf(id) != -1){
                              ret = "blue";
@@ -87,12 +91,13 @@ var app = new Vue({
                              ret = "black";
                          }
                      }*/
-                     if( ret == ""){
-                         return "white";
-                     }else{
-                         return ret;
-                     }
+
                  }
+                 if( ret == ""){
+                      return "white";
+                  }else{
+                      return ret;
+                  }
               }
      }
 });

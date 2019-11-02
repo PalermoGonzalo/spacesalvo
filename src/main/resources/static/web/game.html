@@ -7,8 +7,8 @@
 <body>
     <div id="salvoApp">
         <center>
-            <h2> {{ viewer && viewer.player.email ? viewer.player.email : "" }} - Ship Locations!</h2>
-            <p> {{ viewer && viewer.player.email ? viewer.player.email : "" }} vs {{ enemy && enemy.player.email ? enemy.player.email : ""}} </p>
+            <h2> {{ viewer && viewer.player.user ? viewer.player.user : "" }} - Ship Locations!</h2>
+            <p> {{ viewer && viewer.player.user ? viewer.player.user : "" }} vs {{ enemy && enemy.player.user ? enemy.player.user : ""}} </p>
             <h4> My Board</h4>
         <table>
                 <tr v-for="indexV in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">

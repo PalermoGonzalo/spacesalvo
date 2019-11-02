@@ -133,7 +133,10 @@ var app = new Vue({
                         console.log(response);
                         that.redirect(response.gamePlayerId);
                         return response;
-                    });
+                    })
+                     .fail(function(){
+                        alert("d'ho!, something bad happened!");
+                     });
              },
              redirect: function(gp){
                 window.location.href = '/web/game.html?gp=' + gp;
@@ -144,6 +147,9 @@ var app = new Vue({
                      .then(function(response) {
                          that.redirect(response.gpId);
                          return response;
+                     })
+                     .fail(function(response){
+                        alert("d'ho!, something bad happened!");
                      });
              }
      },

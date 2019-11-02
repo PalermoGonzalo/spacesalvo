@@ -154,13 +154,13 @@ public class SalvoController {
             response.put("error", "Debe estar logueado para acceder");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
         }else {
+            GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
             Player player = playerRepository.findByEmail(authentication.getName());
-            if (id != player.getId()) {
+            if (gamePlayer.getPlayer().getId() != player.getId()) {
                 response.put("error", "Usted no pertenece a este juego");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             } else {
-                GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
-
+                //GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
                 response = gamePlayer.getGame().getDto();
                 response.put("ships", gamePlayer.getShips().stream().map(ship -> ship.getDto()));
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
