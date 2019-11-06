@@ -130,6 +130,39 @@ public class SalvoController {
         }
     }
 
+    @RequestMapping(path = "/games/players/{id}/ships", method =  RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getShips(@PathVariable("id") long id, Authentication authentication){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "You must be log to access this game!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else {
+            GamePlayer gamePlayer = gamePlayerRepository.findById(id).orElse(null);
+            response.put("Ships", gamePlayer.getShips().stream().map(sp -> sp.getDto()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+        }
+    }
+
+    @RequestMapping(path = "/games/players/{id}/ships", method =  RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> setShips(@PathVariable("id") long id, Authentication authentication, @RequestBody List<Ship> ships){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "You must be log to access this game!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else {
+            /**
+             *  AIRCRAFT CARRIER -> SIZE 5
+             *  BATTLESHIP -> SIZE 4
+             *  SUBMARINE -> SIZE 3
+             *  DESTROYER -> SIZE 3
+             *  PATROL BOAT -> SIZE 2
+             */
+
+            response.put("body received: ", ships);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+        }
+    }
+
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(
             @RequestParam String username,
