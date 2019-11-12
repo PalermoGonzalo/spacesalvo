@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -137,7 +138,13 @@ public class SalvoController {
             response.put("error", "You must be log to access this game!");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
         }else {
+            Player player = playerRepository.findByEmail(authentication.getName());
             GamePlayer gamePlayer = gamePlayerRepository.findById(id).orElse(null);
+            if(gamePlayer.getPlayer().getId() != player.getId()){
+                response.put("error", "You are not allowed to see this player information!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+
             response.put("Ships", gamePlayer.getShips().stream().map(sp -> sp.getDto()));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
         }
@@ -150,6 +157,17 @@ public class SalvoController {
             response.put("error", "You must be log to access this game!");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
         }else {
+            GamePlayer gamePlayer = gamePlayerRepository.findById(id).orElse(null);
+            Player player = playerRepository.findByEmail(authentication.getName());
+            if(gamePlayer.getPlayer().getId() != player.getId()){
+                response.put("error", "You are not allowed to see this player information!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+            if(gamePlayer.getShips().size() > 1){
+                response.put("error", "You have alredy set your's ships!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+
             /**
              *  AIRCRAFT CARRIER -> SIZE 5
              *  BATTLESHIP -> SIZE 4
@@ -158,7 +176,11 @@ public class SalvoController {
              *  PATROL BOAT -> SIZE 2
              */
 
-            response.put("body received: ", ships);
+            ships.stream().forEach(p->{
+                if(p.getShipType().equals("SUBMARINE") || p.getShipType().contentEquals("SUBMARINE") || p.getShipType().contentEquals("SUBMARINE") || p.getShipType().contentEquals("SUBMARINE")  || p.getShipType().contentEquals("SUBMARINE")){
+
+                }
+            });
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
         }
     }
@@ -184,7 +206,7 @@ public class SalvoController {
     public ResponseEntity<Map<String, Object>> getGame(@PathVariable("id") long id, Authentication authentication){
         Map<String, Object> response = new HashMap<>();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-            response.put("error", "Debe estar logueado para acceder");
+            response.put("error", "You must be log to access this game!");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
         }else {
             GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
