@@ -84,12 +84,29 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gp6);
 			gamePlayerRepository.save(gp7);
 
-			Ship sp1 = new Ship ("Destroyer", gp1, Arrays.asList("G5","G6","G7","G8"));
-			Ship sp2 = new Ship ("Submarine", gp1, Arrays.asList("D1","D2"));
-			Ship sp3 = new Ship ("Patrol Boat", gp1, Arrays.asList("C1","C2","C3"));
-			Ship sp4 = new Ship ("Destroyer", gp2, Arrays.asList("C1","C2","C3","C4"));
-			Ship sp5 = new Ship ("Submarine", gp2, Arrays.asList("A1","A2"));
-			Ship sp6 = new Ship ("Patrol Boat", gp2, Arrays.asList("G1","G2","G3"));
+			/**
+			 *  AIRCRAFT CARRIER -> SIZE 5
+			 *  BATTLESHIP -> SIZE 4
+			 *  SUBMARINE -> SIZE 3
+			 *  DESTROYER -> SIZE 3
+			 *  PATROL BOAT -> SIZE 2
+			 */
+
+			Ship sp1 = new Ship ("AIRCRAFT CARRIER", gp1, Arrays.asList("G5","G6","G7","G8","G9"));
+			Ship sp2 = new Ship ("BATTLESHIP", gp1, Arrays.asList("C5","C6","C7","C8"));
+			Ship sp3 = new Ship ("SUBMARINE", gp1, Arrays.asList("D1","D2","D3"));
+			Ship sp4 = new Ship ("DESTROYER", gp1, Arrays.asList("A6","A7","A8"));
+			Ship sp5 = new Ship ("PATROL BOAT", gp1, Arrays.asList("B1","B2"));
+			Ship sp6 = new Ship ("AIRCRAFT CARRIER", gp2, Arrays.asList("A2","B2","C2","D2","E2"));
+			Ship sp7 = new Ship ("BATTLESHIP", gp2, Arrays.asList("D4","E4","F4","G4"));
+			Ship sp8 = new Ship ("SUBMARINE", gp2, Arrays.asList("C6","D6","E6"));
+			Ship sp9 = new Ship ("DESTROYER", gp2, Arrays.asList("E8","F8","G8"));
+			Ship sp10 = new Ship ("PATROL BOAT", gp2, Arrays.asList("G2","H2"));
+			Ship sp11 = new Ship ("AIRCRAFT CARRIER", gp7, Arrays.asList("A2","B2","C2","D2","E2"));
+			Ship sp12 = new Ship ("BATTLESHIP", gp7, Arrays.asList("D4","E4","F4","G4"));
+			Ship sp13 = new Ship ("SUBMARINE", gp7, Arrays.asList("C6","D6","E6"));
+			Ship sp14 = new Ship ("DESTROYER", gp7, Arrays.asList("E8","F8","G8"));
+			Ship sp15 = new Ship ("PATROL BOAT", gp7, Arrays.asList("G2","H2"));
 
 			shipRepository.save(sp1);
 			shipRepository.save(sp2);
@@ -97,6 +114,15 @@ public class SalvoApplication {
 			shipRepository.save(sp4);
 			shipRepository.save(sp5);
 			shipRepository.save(sp6);
+			shipRepository.save(sp7);
+			shipRepository.save(sp8);
+			shipRepository.save(sp9);
+			shipRepository.save(sp10);
+			shipRepository.save(sp11);
+			shipRepository.save(sp12);
+			shipRepository.save(sp13);
+			shipRepository.save(sp14);
+			shipRepository.save(sp15);
 
 			Salvo sv1 = new Salvo(1, gp1, Arrays.asList("A4","D8"));
 			Salvo sv2 = new Salvo(2, gp1, Arrays.asList("I3","B1"));
