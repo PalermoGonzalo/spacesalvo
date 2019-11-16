@@ -29,6 +29,11 @@ public class Ship {
 
     public Ship() { }
 
+    public Ship(String shipType,  List<String> locations){
+        this.shipType = shipType;
+        this.location = locations;
+    }
+
     public Ship(String shipType, GamePlayer GamePlayer, List<String> locations){
         this.shipType = shipType;
         this.gamePlayer = GamePlayer;
@@ -37,6 +42,10 @@ public class Ship {
 
     public GamePlayer getGamePlayer() {
         return gamePlayer;
+    }
+
+    public void setGamePlayer(GamePlayer gamePlayer){
+        this.gamePlayer = gamePlayer;
     }
 
     public String getShipType(){
