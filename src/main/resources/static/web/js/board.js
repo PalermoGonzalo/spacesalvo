@@ -5,6 +5,7 @@ var app = new Vue({
         selectedPlayer:"",
         games:"",
         viewer:"",
+        shipsType:["AIRCRAFT CARRIER","BATTLESHIP","SUBMARINE","DESTROYER","PATROL BOAT"],
         ships:"",
         shipsLocations:"",
         localSalvo:"",
@@ -38,6 +39,15 @@ var app = new Vue({
                          return myJson;
                      });
              },
+             returnHome: function(){
+             window.location.href = '/web/games.html';
+             },
+             logout: function(){
+                  $.post("/api/logout")
+                      .then(function() {
+                          alert("Logged out");
+                      });
+              },
              loadPlayers: function(){
                 let that = this;
                 that.games.gamePlayers.forEach(function(player){
