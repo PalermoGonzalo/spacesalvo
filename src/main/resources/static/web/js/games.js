@@ -13,7 +13,9 @@ var app = new Vue({
         players: []
      },
      created() {
+        this.loadGames();
          this.loadScores();
+         //this.loadGames();
      },
      methods: {
              loadScores: function() {
@@ -83,14 +85,18 @@ var app = new Vue({
                     });
              },
              loadGames: function(){
+                let that = this;
                 fetch('/api/games')
                   .then(function(response) {
                       return response.json();
                   })
                   .then(function(myJson) {
                       //console.log(myJson);
-                      this.app.playerId = myJson.player.id;
-                      this.app.games = myJson;
+                      that.playerId = myJson.player.id;
+                      that.games = myJson;
+                      if(that.playerId != null){
+                        that.showLogin = 0;
+                      }
                       return myJson;
                   });
              },
@@ -139,7 +145,7 @@ var app = new Vue({
                      });
              },
              redirect: function(gp){
-                window.location.href = '/web/game.html?gp=' + gp;
+                window.location.href = '/web/board.html?gp=' + gp;
              },
              joinGame: function(id){
              let that = this;
