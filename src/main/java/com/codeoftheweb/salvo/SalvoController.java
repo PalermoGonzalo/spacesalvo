@@ -132,19 +132,22 @@ public class SalvoController {
     }
 
     @RequestMapping(path = "/games/players/{id}/ships", method =  RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> getShips(@PathVariable("id") long id, Authentication authentication){
+    public ResponseEntity<Map<String, Object>> getShips(@PathVariable("id") long id, @RequestBody List<Ship> ships, Authentication authentication){
         Map<String, Object> response = new HashMap<>();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             response.put("error", "You must be log to access this game!");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
         }else {
-            Player player = playerRepository.findByEmail(authentication.getName());
             GamePlayer gamePlayer = gamePlayerRepository.findById(id).orElse(null);
-            if(gamePlayer.getPlayer().getId() != player.getId()){
+            Player player = playerRepository.findByEmail(authentication.getName());
+            if ( gamePlayer == null ){
+                response.put("error", "Not such game!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+            }
+            if (gamePlayer.getPlayer().getId() != player.getId()){
                 response.put("error", "You are not allowed to see this player information!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }
-
             response.put("Ships", gamePlayer.getShips().stream().map(sp -> sp.getDto()));
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
         }
@@ -159,14 +162,30 @@ public class SalvoController {
         }else {
             GamePlayer gamePlayer = gamePlayerRepository.findById(id).orElse(null);
             Player player = playerRepository.findByEmail(authentication.getName());
-            if(gamePlayer.getPlayer().getId() != player.getId()){
+            if ( gamePlayer == null ){
+                response.put("error", "Not such game!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+            }
+            if (gamePlayer.getPlayer().getId() != player.getId()){
                 response.put("error", "You are not allowed to see this player information!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }
-            if(gamePlayer.getShips().size() > 1){
-                response.put("error", "You have alredy set your's ships!");
+            if (gamePlayer.getShips().size() > 0) {
+                response.put("error", "You have already set your's ships!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }
+            if (ships == null || ships.size() != 5) {
+                response.put("error", "You must add 5 ships!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+            /* Generar checkeos de posiciones ilegales
+            if (ships.stream().anyMatch(ship -> this.illegalPosition(ship))) {
+                response.put("error", "Some of your's ships are wrong placed!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+            */
+            ships.forEach(ship -> gamePlayer.setShip(ship));
+            gamePlayerRepository.save(gamePlayer);
 
             /**
              *  AIRCRAFT CARRIER -> SIZE 5
@@ -175,12 +194,7 @@ public class SalvoController {
              *  DESTROYER -> SIZE 3
              *  PATROL BOAT -> SIZE 2
              */
-
-            ships.stream().forEach(p->{
-                if(p.getShipType().equals("SUBMARINE") || p.getShipType().contentEquals("SUBMARINE") || p.getShipType().contentEquals("SUBMARINE") || p.getShipType().contentEquals("SUBMARINE")  || p.getShipType().contentEquals("SUBMARINE")){
-
-                }
-            });
+            response.put("status", "Ships placed!");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
         }
     }
