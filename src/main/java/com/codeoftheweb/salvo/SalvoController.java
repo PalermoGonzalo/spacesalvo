@@ -131,8 +131,8 @@ public class SalvoController {
         }
     }
 
-    @RequestMapping(path = "/games/players/{id}/ships", method =  RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> getShips(@PathVariable("id") long id, @RequestBody List<Ship> ships, Authentication authentication){
+    @RequestMapping(path = "/games/players/{idGamePlayer}/ships", method =  RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getShips(@PathVariable("idGamePlayer") long id, @RequestBody List<Ship> ships, Authentication authentication){
         Map<String, Object> response = new HashMap<>();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             response.put("error", "You must be log to access this game!");
@@ -153,8 +153,8 @@ public class SalvoController {
         }
     }
 
-    @RequestMapping(path = "/games/players/{id}/ships", method =  RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> setShips(@PathVariable("id") long id, Authentication authentication, @RequestBody List<Ship> ships){
+    @RequestMapping(path = "/games/players/{idGamePlayer}/ships", method =  RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> setShips(@PathVariable("idGamePlayer") long id, Authentication authentication, @RequestBody List<Ship> ships){
         Map<String, Object> response = new HashMap<>();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             response.put("error", "You must be log to access this game!");
@@ -178,12 +178,10 @@ public class SalvoController {
                 response.put("error", "You must add 5 ships!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }
-            /* Generar checkeos de posiciones ilegales
             if (ships.stream().anyMatch(ship -> this.illegalPosition(ship))) {
                 response.put("error", "Some of your's ships are wrong placed!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }
-            */
             ships.forEach(ship -> gamePlayer.setShip(ship));
             gamePlayerRepository.save(gamePlayer);
 
@@ -197,6 +195,12 @@ public class SalvoController {
             response.put("status", "Ships placed!");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
         }
+    }
+
+    private boolean illegalPosition(Ship ship){
+        /* TODO: Check overlaping, border limits*/
+
+        return false;
     }
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)
