@@ -59,6 +59,11 @@ public class GamePlayer {
 
     public Set<Ship> getShips(){ return ships;}
 
+    public void setShip(Ship ship){
+        this.ships.add(ship);
+        ship.setGamePlayer(this);
+    }
+
     public Set<Salvo> getSalvo(){ return salvo;}
 
     public Map<String, Object> getDto(){
