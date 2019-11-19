@@ -39,8 +39,8 @@
                 <center>
                     <h4> My Ships!</h4>
                     <table style="background: url('./img/BackGround.gif')" draggable="true">
-                        <tr v-for="indexV in 10" style="height: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;"  v-on:dragover="dragover" v-on:dragenter="dragenter">
-                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)" v-on:dragover="dragover(event)" v-on:drop="drop"></td>
+                        <tr v-for="indexV in 10" style="height: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;"  v-on:dragover="dragover">
+                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)" v-on:dragover="dragover" v-on:drop="drop"></td>
                         </tr>
                     </table>
                 </center>

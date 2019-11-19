@@ -13,7 +13,8 @@ var app = new Vue({
         shipsLocations:"",
         localSalvo:"",
         enemySalvo:"",
-        enemy:""
+        enemy:"",
+        dragPosition:""
     },
      created() {
         let uri = window.location.search.substring(1);
@@ -103,13 +104,12 @@ var app = new Vue({
                  console.log(ev);
              },
              dragover: function(ev){
-                 console.log(ev);
+                 this.dragPosition = ev.target.id;
+                 console.log(this.dragPosition);
              },
              dragenter: function(ev){
-                 console.log(ev);
-             },
-             dragenter: function(ev){
-                console.log(ev);
+                this.dragPosition = ev.target.id;
+                console.log(this.dragPosition);
              }
       }
 });
