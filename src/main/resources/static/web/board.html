@@ -34,28 +34,28 @@
             <h2>Match</h2>
             <p> {{ viewer && viewer.player.user ? viewer.player.user : "" }} vs {{ enemy && enemy.player.user ? enemy.player.user : ""}} </p>
         </center>
-        <div class="row">
+        <div class="row" style="background-color: black;">
             <div class="col-md-5">
                 <center>
                     <h4> My Ships!</h4>
-                    <table>
-                        <tr v-for="indexV in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
-                            <td v-for="indexH in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)"></td>
+                    <table style="background: url('./img/BackGround.gif')" draggable="true">
+                        <tr v-for="indexV in 10" style="height: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;"  v-on:dragover="dragover" v-on:dragenter="dragenter">
+                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)" v-on:dragover="dragover(event)" v-on:drop="drop"></td>
                         </tr>
                     </table>
                 </center>
             </div>
             <div class="col-md-2 justify-content-center">
                 <ul>
-                    <li v-for="ship in shipsType"> {{ ship }} </li>
+                    <li v-for="ship in shipsType.type"> <img v-bind:src="'./img/' + ship + '.png'" v-bind:height="shipsType.imageHeight"></li>
                 </ul>
             </div>
             <div class="col-md-5">
                 <center>
                     <h4> My Shoots! </h4>
-                    <table>
-                        <tr v-for="indexV in 10" style="height: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;">
-                            <td v-for="indexH in 10" style="width: 30px; border: 1px solid black; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + myShoots(grid.charAt(indexH -1) + indexV)"></td>
+                    <table style="background: url('./img/BackGround.gif')">
+                        <tr v-for="indexV in 10" style="height: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;">
+                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + myShoots(grid.charAt(indexH -1) + indexV)" ></td>
                         </tr>
                     </table>
                 </center>

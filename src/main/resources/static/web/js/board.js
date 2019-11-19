@@ -5,7 +5,10 @@ var app = new Vue({
         selectedPlayer:"",
         games:"",
         viewer:"",
-        shipsType:["AIRCRAFT CARRIER","BATTLESHIP","SUBMARINE","DESTROYER","PATROL BOAT"],
+        shipsType:{
+            type:["AIRCRAFT CARRIER","BATTLESHIP","SUBMARINE","DESTROYER","PATROL BOAT"],
+            imageHeight:50
+        },
         ships:"",
         shipsLocations:"",
         localSalvo:"",
@@ -65,7 +68,7 @@ var app = new Vue({
                 });
              },
              select: function(id){
-                let ret = "white";
+                let ret = "transparent";
                 if(this.enemySalvo){
                     this.enemySalvo.forEach(function(enemySalvos){
                         if(enemySalvos.indexOf(id) != -1){
@@ -86,28 +89,27 @@ var app = new Vue({
                 return ret;
              },
              myShoots: function(id){
-                 let ret = "";
+                 let ret = "transparent";
                  if(this.localSalvo){
                      this.localSalvo.forEach(function(localSalvos){
                          if(localSalvos.indexOf(id) != -1){
                              ret = "blue";
                          }
                      });
-                     /*
-                     if( this.shipsLocations.indexOf(id) != -1){
-                         if(ret == "blue"){
-                             ret = "red";
-                         }else{
-                             ret = "black";
-                         }
-                     }*/
-
                  }
-                 if( ret == ""){
-                      return "white";
-                  }else{
-                      return ret;
-                  }
-              }
-     }
+                 return ret;
+              },
+             drop: function(ev){
+                 console.log(ev);
+             },
+             dragover: function(ev){
+                 console.log(ev);
+             },
+             dragenter: function(ev){
+                 console.log(ev);
+             },
+             dragenter: function(ev){
+                console.log(ev);
+             }
+      }
 });
