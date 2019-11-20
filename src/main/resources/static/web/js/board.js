@@ -7,14 +7,24 @@ var app = new Vue({
         viewer:"",
         shipsType:{
             type:["AIRCRAFT CARRIER","BATTLESHIP","SUBMARINE","DESTROYER","PATROL BOAT"],
+            size:[5,4,3,3,2],
             imageHeight:50
+        },
+        myBoard:{
+            ships:[],
+            location:[],
+            rotation:[],
+            hits:[],
+            water:[]
         },
         ships:"",
         shipsLocations:"",
         localSalvo:"",
         enemySalvo:"",
         enemy:"",
-        dragPosition:""
+        dragPosition:"",
+        dragElement:"",
+        dragElementRotation: 0
     },
      created() {
         let uri = window.location.search.substring(1);
@@ -101,15 +111,44 @@ var app = new Vue({
                  return ret;
               },
              drop: function(ev){
-                 console.log(ev);
+                console.log("Casilla cabeza: " + this.dragPosition);
+                console.log("Elemento: " + this.dragElement);
+
+                let count = this.shipsType.size[this.shipsType.type.indexOf(this.dragElement)];
+                let column = this.grid.indexOf(this.dragElement.substring(0, 1)) - 1;
+                let row = this.dragElement.substring(1, 1);
+
+                for(index = 0; index < count; index++){
+                    if(this.dragElementRotation > 0){
+                        console.log("position: " + this.grid.charAt(column) + (row + index));
+                        //this.myBoard.ships.push(this.dragElement);
+                        //this.myBoard.location.push(column + (row + index));
+                    }else{
+                        console.log("position: " + this.grid.charAt(column + index)+row);
+                        //this.myBoard.ships.push(this.dragElement);
+                        //this.myBoard.location.push(grid.charAt(column + index)+row);
+                    }
+                }
              },
              dragover: function(ev){
                  this.dragPosition = ev.target.id;
                  console.log(this.dragPosition);
              },
-             dragenter: function(ev){
-                this.dragPosition = ev.target.id;
-                console.log(this.dragPosition);
+             setDragElement: function(shipType){
+                this.dragElement = shipType;
+             },
+             checkPosition: function(id){
+                if(this.myBoard.location.indexOf(id) != -1){
+                    return true;
+                }
+                return false;
+             },
+             cellImage: function(id){
+                let response = "";
+                if(this.myBoard.location.indexOf(id) != -1){
+                    response = this.myBoard.ships[this.myBoard.location.indexOf(id)];
+                }
+                return response;
              }
       }
 });

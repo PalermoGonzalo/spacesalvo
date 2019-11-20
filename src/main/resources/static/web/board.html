@@ -40,14 +40,16 @@
                     <h4> My Ships!</h4>
                     <table style="background: url('./img/BackGround.gif')" draggable="true">
                         <tr v-for="indexV in 10" style="height: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;"  v-on:dragover="dragover">
-                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)" v-on:dragover="dragover" v-on:drop="drop"></td>
+                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)"  v-on:dragover="dragover" >
+                                <img v-bind:src="'./img/' + cellImage(grid.charAt(indexH -1) + indexV) + '.png'" v-show="checkPosition(grid.charAt(indexH -1) + indexV)">
+                            </td>
                         </tr>
                     </table>
                 </center>
             </div>
             <div class="col-md-2 justify-content-center">
                 <ul>
-                    <li v-for="ship in shipsType.type"> <img v-bind:src="'./img/' + ship + '.png'" v-bind:height="shipsType.imageHeight"></li>
+                    <li v-for="ship in shipsType.type"> <img v-bind:src="'./img/' + ship + '.png'" v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true"></li>
                 </ul>
             </div>
             <div class="col-md-5">
