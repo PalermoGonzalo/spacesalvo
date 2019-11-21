@@ -8,7 +8,7 @@ var app = new Vue({
         shipsType:{
             type:["AIRCRAFT CARRIER","BATTLESHIP","SUBMARINE","DESTROYER","PATROL BOAT"],
             size:[5,4,3,3,2],
-            imageHeight:50
+            imageHeight:50,
         },
         myBoard:{
             ships:[],
@@ -17,7 +17,8 @@ var app = new Vue({
             hits:[],
             water:[]
         },
-        ships:"",
+        ships:[],
+        //ships:"",
         shipsLocations:"",
         localSalvo:"",
         enemySalvo:"",
@@ -44,8 +45,14 @@ var app = new Vue({
                             alert(myJson.error);
                         }else{
                              this.app.games = myJson;
-                             this.app.ships = myJson.ships;
-                             this.app.ships.forEach(function(ship){
+                             myJson.ships.forEach(function(ship){
+                                let objShip = {
+                                    propertyKey: ship.shipType,
+                                    position : [...ship.locations],
+                                    rotation : 0
+                                     };
+
+                                this.ships += objShip;
                                 this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
                              });
                              this.app.loadPlayers();
@@ -115,18 +122,20 @@ var app = new Vue({
                 console.log("Elemento: " + this.dragElement);
 
                 let count = this.shipsType.size[this.shipsType.type.indexOf(this.dragElement)];
-                let column = this.grid.indexOf(this.dragElement.substring(0, 1)) - 1;
-                let row = this.dragElement.substring(1, 1);
+                console.log("Ship size: " + count);
+                let column = this.grid.indexOf(this.dragPosition.substring(0, 1));
+                console.log("Start column: " + this.dragPosition.substring(0, 1));
+                console.log("Start column index: " + column);
+                let row = this.dragPosition.substring(1, 2);
+                console.log("Start row: " + row);
 
                 for(index = 0; index < count; index++){
                     if(this.dragElementRotation > 0){
-                        console.log("position: " + this.grid.charAt(column) + (row + index));
-                        //this.myBoard.ships.push(this.dragElement);
-                        //this.myBoard.location.push(column + (row + index));
+                        this.myBoard.ships.push(this.dragElement);
+                        this.myBoard.location.push(column + (row + index));
                     }else{
-                        console.log("position: " + this.grid.charAt(column + index)+row);
-                        //this.myBoard.ships.push(this.dragElement);
-                        //this.myBoard.location.push(grid.charAt(column + index)+row);
+                        this.myBoard.ships.push(this.dragElement);
+                        this.myBoard.location.push(this.grid.charAt(column + index)+row);
                     }
                 }
              },
