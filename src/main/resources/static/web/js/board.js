@@ -25,7 +25,9 @@ var app = new Vue({
         enemy:"",
         dragPosition:"",
         dragElement:"",
-        dragElementRotation: 0
+        dragElementRotation: 0,
+        horizontal: true,
+        vertical: false
     },
      created() {
         let uri = window.location.search.substring(1);
@@ -47,12 +49,10 @@ var app = new Vue({
                              this.app.games = myJson;
                              myJson.ships.forEach(function(ship){
                                 let objShip = {
-                                    propertyKey: ship.shipType,
+                                    ship: ship.shipType,
                                     position : [...ship.locations],
-                                    rotation : 0
-                                     };
-
-                                this.ships += objShip;
+                                    rotation : 0 };
+                                this.app.ships.push(objShip);
                                 this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
                              });
                              this.app.loadPlayers();
@@ -103,7 +103,6 @@ var app = new Vue({
                         }
                     }
                 }
-
                 return ret;
              },
              myShoots: function(id){
@@ -116,32 +115,31 @@ var app = new Vue({
                      });
                  }
                  return ret;
-              },
+             },
              drop: function(ev){
-                console.log("Casilla cabeza: " + this.dragPosition);
-                console.log("Elemento: " + this.dragElement);
-
                 let count = this.shipsType.size[this.shipsType.type.indexOf(this.dragElement)];
-                console.log("Ship size: " + count);
                 let column = this.grid.indexOf(this.dragPosition.substring(0, 1));
-                console.log("Start column: " + this.dragPosition.substring(0, 1));
-                console.log("Start column index: " + column);
-                let row = this.dragPosition.substring(1, 2);
-                console.log("Start row: " + row);
-
+                let row = parseInt(this.dragPosition.substring(1, 2));
+                let tempShip = {ships:[], location:[]};
+                let validation = 0;
                 for(index = 0; index < count; index++){
+                    tempShip.ships.push(this.dragElement);
                     if(this.dragElementRotation > 0){
-                        this.myBoard.ships.push(this.dragElement);
-                        this.myBoard.location.push(column + (row + index));
+                        if(row + index >= 10){validation = 1;}
+                        tempShip.location.push(this.grid.charAt(column) + (row + index));
                     }else{
-                        this.myBoard.ships.push(this.dragElement);
-                        this.myBoard.location.push(this.grid.charAt(column + index)+row);
+                        if(column + index >= 10){validation = 1;}
+                        tempShip.location.push(this.grid.charAt(column + index)+row);
                     }
                 }
+                if(validation == 0){
+                    this.myBoard.ships = [...this.myBoard.ships, ...tempShip.ships];
+                    this.myBoard.location = [...this.myBoard.location, ...tempShip.location];
+                }
+                console.log(tempShip);
              },
              dragover: function(ev){
                  this.dragPosition = ev.target.id;
-                 console.log(this.dragPosition);
              },
              setDragElement: function(shipType){
                 this.dragElement = shipType;
@@ -158,6 +156,17 @@ var app = new Vue({
                     response = this.myBoard.ships[this.myBoard.location.indexOf(id)];
                 }
                 return response;
+             },
+             setVertical: function(){
+                this.horizontal = !this.horizontal;
+                this.vertical = !this.vertical;
+                if(this.dragElementRotation == 0){
+                    this.dragElementRotation= 90;
+                }else{
+                    this.dragElementRotation = 0;
+                }
+                console.log("Horizontal: " + this.horizontal);
+                console.log("Vertical: " + this.vertical);
              }
       }
 });

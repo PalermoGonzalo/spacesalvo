@@ -49,8 +49,14 @@
             </div>
             <div class="col-md-2 justify-content-center">
                 <ul>
-                    <li v-for="ship in shipsType.type"> <img v-bind:src="'./img/' + ship + '.png'" v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true"></li>
+                    <li v-for="ship in shipsType.type">
+                        <div v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true" class="ship-rotation" v-bind:class="{rotateHorizontal: horizontal, rotateVertical: vertical }">
+                            <img v-bind:src="'./img/' + ship + '.png'" >
+                        </div>
+                    </li>
                 </ul>
+                <br>
+                <button v-on:click="setVertical"> Vertical </button>
             </div>
             <div class="col-md-5">
                 <center>

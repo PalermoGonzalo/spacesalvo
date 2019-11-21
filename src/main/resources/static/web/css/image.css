@@ -1,0 +1,12 @@
+.ship-rotation {
+  &.rotateHorizontal {
+    transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  -webkit-transform: rotate(0deg);
+  }
+  &.rotateVertical {
+    transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  }
+}
