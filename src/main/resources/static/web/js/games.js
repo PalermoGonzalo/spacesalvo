@@ -94,6 +94,7 @@ var app = new Vue({
                       //console.log(myJson);
                       that.playerId = myJson.player.id;
                       that.games = myJson;
+                      that.email = myJson.player.user;
                       if(that.playerId != null){
                         that.showLogin = 0;
                       }
