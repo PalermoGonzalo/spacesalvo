@@ -4,66 +4,62 @@
     <meta charset="UTF-8">
     <title>Play Salvo</title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></link>
-
-    <!-- jQuery library -->
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
-
-    <!-- Popper JS -->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>-->
-
-    <!-- Latest compiled JavaScript -->
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>-->
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-    <div id="salvoApp">
+    <div id="salvoApp" v-bind:style=" { height: currentHeight } ">
         <div class="navbar bg-dark navbar-dark">
             <div class="justyfy-content-start">
-                <button class="btn btn-default" v-on:click="returnHome()"> Return </button>
+                <div>
+                    <button class="btn btn-default" v-on:click="returnHome()"> Return </button>
+                </div>
             </div>
             <div class="justify-content-center">
-                    <h4 style="color: white"> {{ viewer.player.user }}! </h4>
+                    <h4 style="color: white"> {{ player.user }}! </h4>
             </div>
             <div class="justify-content-end">
-                    <button class="btn btn-default" v-on:click="logout()"> Logout </button>
+                    <button class="btn" v-on:click="logout()"> Logout </button>
             </div>
         </div>
         <center>
             <h2>Match</h2>
-            <p> {{ viewer && viewer.player.user ? viewer.player.user : "" }} vs {{ enemy && enemy.player.user ? enemy.player.user : ""}} </p>
+            <p> {{ player && player.user ? player.user : "" }} vs {{ enemy && enemy.user ? enemy.user : ""}} </p>
         </center>
-        <div class="row" style="background-color: black;">
+        <div class="row">
             <div class="col-md-5">
                 <center>
                     <h4> My Ships!</h4>
                     <table style="background: url('./img/BackGround.gif')" draggable="true">
-                        <tr v-for="indexV in 10" style="height: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;"  v-on:dragover="dragover">
-                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + select(grid.charAt(indexH -1) + indexV)"  v-on:dragover="dragover" >
-                                <img v-bind:src="'./img/' + cellImage(grid.charAt(indexH -1) + indexV) + '.png'" v-show="checkPosition(grid.charAt(indexH -1) + indexV)">
+                        <tr v-for="indexV in 10"   v-on:dragover="dragover">
+                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" style="background-color: transparent" v-on:dragover="dragover" >
+                                <img v-bind:src="'./img/' + cellContent(grid.charAt(indexH -1) + indexV) + '.png'" v-show="checkPosition(grid.charAt(indexH -1) + indexV)">
                             </td>
                         </tr>
                     </table>
                 </center>
             </div>
             <div class="col-md-2 justify-content-center">
+                <br>
+                <br>
                 <ul>
                     <li v-for="ship in shipsType.type">
-                        <div v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true" class="ship-rotation" v-bind:class="{rotateHorizontal: horizontal, rotateVertical: vertical }">
-                            <img v-bind:src="'./img/' + ship + '.png'" >
+                        <div v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true" class="ship-rotation" v-bind:class="{rotateHorizontal: (dragElement.rotation == 0)?true:false, rotateVertical: (dragElement.rotation == 0)?false:true }">
+                            <img v-bind:src="'./img/' + ship + '.png'">
                         </div>
                     </li>
                 </ul>
                 <br>
-                <button v-on:click="setVertical"> Vertical </button>
+                <center>
+                    <button class="btn" v-on:click="rotate"> {{ btnText }} </button>
+                </center>
             </div>
             <div class="col-md-5">
                 <center>
                     <h4> My Shoots! </h4>
                     <table style="background: url('./img/BackGround.gif')">
-                        <tr v-for="indexV in 10" style="height: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;">
-                            <td v-for="indexH in 10" style="width: 50px; border: 1px solid white; border-radius: 5px; padding: 0; margin: 0;" v-bind:id="grid.charAt(indexH -1) + indexV" v-bind:style="'background-color: ' + myShoots(grid.charAt(indexH -1) + indexV)" ></td>
+                        <tr v-for="indexV in 10">
+                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" ></td>
                         </tr>
                     </table>
                 </center>
@@ -76,3 +72,32 @@
     <script src="./js/board.js"></script>
 </body>
 </html>
+
+ <style>
+    #salvoApp {
+        background-color: #AAAAAA;
+        height: 99vh;
+    }
+
+    #title {
+        background-color: #000000;
+    }
+
+    tr {
+        height: 50px;
+        width: 50px;
+        border: 1px solid white;
+        border-radius: 5px;
+        padding: 0;
+        margin: 0;
+    }
+
+    td {
+        height: 50px;
+        width: 50px;
+        border: 1px solid white;
+        border-radius: 5px;
+        padding: 0;
+        margin: 0;
+    }
+</style>
