@@ -132,7 +132,7 @@ public class SalvoController {
     }
 
     @RequestMapping(path = "/games/players/{idGamePlayer}/ships", method =  RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> getShips(@PathVariable("idGamePlayer") long id, @RequestBody List<Ship> ships, Authentication authentication){
+    public ResponseEntity<Map<String, Object>> getShips(@PathVariable("idGamePlayer") long id, Authentication authentication){
         Map<String, Object> response = new HashMap<>();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             response.put("error", "You must be log to access this game!");

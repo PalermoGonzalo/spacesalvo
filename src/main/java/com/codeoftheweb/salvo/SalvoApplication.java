@@ -102,11 +102,6 @@ public class SalvoApplication {
 			Ship sp8 = new Ship ("SUBMARINE", gp2, Arrays.asList("C6","D6","E6"));
 			Ship sp9 = new Ship ("DESTROYER", gp2, Arrays.asList("E8","F8","G8"));
 			Ship sp10 = new Ship ("PATROL BOAT", gp2, Arrays.asList("G2","H2"));
-			Ship sp11 = new Ship ("AIRCRAFT CARRIER", gp7, Arrays.asList("A2","B2","C2","D2","E2"));
-			Ship sp12 = new Ship ("BATTLESHIP", gp7, Arrays.asList("D4","E4","F4","G4"));
-			Ship sp13 = new Ship ("SUBMARINE", gp7, Arrays.asList("C6","D6","E6"));
-			Ship sp14 = new Ship ("DESTROYER", gp7, Arrays.asList("E8","F8","G8"));
-			Ship sp15 = new Ship ("PATROL BOAT", gp7, Arrays.asList("G2","H2"));
 
 			shipRepository.save(sp1);
 			shipRepository.save(sp2);
@@ -118,11 +113,6 @@ public class SalvoApplication {
 			shipRepository.save(sp8);
 			shipRepository.save(sp9);
 			shipRepository.save(sp10);
-			shipRepository.save(sp11);
-			shipRepository.save(sp12);
-			shipRepository.save(sp13);
-			shipRepository.save(sp14);
-			shipRepository.save(sp15);
 
 			Salvo sv1 = new Salvo(1, gp1, Arrays.asList("A4","D8"));
 			Salvo sv2 = new Salvo(2, gp1, Arrays.asList("I3","B1"));

@@ -60,6 +60,7 @@ public class Ship {
         return this.location;
     }
 
+    public void setLocations(List<String> locations) { this.location = locations;}
 
     public Map<String, Object> getDto(){
         Map<String, Object> shipDto = new LinkedHashMap<>();

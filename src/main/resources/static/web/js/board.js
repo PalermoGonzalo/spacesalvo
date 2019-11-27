@@ -27,19 +27,19 @@ var app = new Vue({
 		},
 		unSaveShips: [
 		                {
-		                    ships:"AIRCRAFT CARRIER",
+		                    shipType:"AIRCRAFT CARRIER",
                             location:[]
                         },{
-                            ships:"BATTLESHIP",
+                            shipType:"BATTLESHIP",
                             location:[]
                         },{
-                            ships:"SUBMARINE",
+                            shipType:"SUBMARINE",
                             location:[]
                         },{
-                            ships:"DESTROYER",
+                            shipType:"DESTROYER",
                             location:[]
                         },{
-                            ships:"PATROL BOAT",
+                            shipType:"PATROL BOAT",
                             location:[]
                         }
                      ]
@@ -85,6 +85,35 @@ var app = new Vue({
 						 return myJson;
 					 });
 			 },
+			 saveShips: function(){
+			    console.log("Saving ships...");
+			    $.ajax({
+                  url:"/api/games/players/" + this.selectedPlayer + "/ships",
+                  type:"POST",
+                  data:JSON.stringify(this.unSaveShips),
+                  contentType:"application/json",
+                  dataType:"json",
+                  success: function(response){
+                        response.forEach(function (data){
+                         if(data == "status"){
+                             console.log("OK");
+                         }else{
+                            console.log("error");
+                            console.log(response);
+                         }
+                     });
+                  }
+                });
+                /*
+                 $.post("/api/games/players/" + this.selectedPlayer + "/ships", JSON.stringify(this.unSaveShips) )
+                     .done(function(response) {
+
+                     })
+                     .fail(function(){
+                         alert("Username or password error!");
+                     });
+                     */
+			 },
 			 returnHome: function(){
 			    window.location.href = '/web/games.html';
 			 },
@@ -121,13 +150,17 @@ var app = new Vue({
 				if(!illegalPos){
 				    if(this.validation(tempShip) == 0){
 				        this.unSaveShips.forEach(function(ship){
-				            if(ship.ships == tempShip.ships){
+				            if(ship.shipType == tempShip.ships){
 				                ship.location = [...ship.location, ...tempShip.location];
 				            }
 				        });
                     }
 				}else{
 				    console.log("Illegal position!");
+				}
+                console.log(this.shipsLocated);
+				if(this.shipsLocated == 0){
+				    this.saveShips();
 				}
 			 },
 			 innerGrid: function(index, pos){
@@ -189,15 +222,48 @@ var app = new Vue({
 			            response = ship.ship;
 			        }
 			    });
+			    this.unSaveShips.forEach(function(ship){
+			        if(ship.location.indexOf(id) != -1){
+                        response = ship.ships;
+                    }
+			    });
 			    return response;
 			 },
 			 clone: function(obj){
                  return JSON.parse(JSON.stringify(obj));
+             },
+             loadShip: function(shipType){
+                let response = true;
+                this.ships.forEach(function(ship){
+                    if(ship.ships == shipType){
+                        if(ship.position.length != 0){
+                            response = false;
+                        }
+                    }
+                });
+                this.unSaveShips.forEach(function(ship){
+                    if(ship.shipType == shipType){
+                        if(ship.location.length != 0){
+                             response = false;
+                         }
+                    }
+                });
+                return response;
              }
 	 },
 	computed:{
 	   currentHeight: function(){
 		   return window.innerHeight;
+	   },
+	   shipsLocated: function(){
+	       let count = 0;
+	       this.unSaveShips.forEach(function(ship){
+	            if(ship.location.length == 0){
+	                console.log(count);
+	                count++;
+	            }
+	       });
+	       return count;
 	   }
 	}
 });
