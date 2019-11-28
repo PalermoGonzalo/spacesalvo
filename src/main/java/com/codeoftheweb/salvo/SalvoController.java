@@ -9,10 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -39,8 +36,8 @@ public class SalvoController {
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             response.put("player", "null");
         } else {
-            Player player = playerRepository.findByEmail(authentication.getName());
-            response.put("player", player.getDto());
+                    Player player = playerRepository.findByEmail(authentication.getName());
+                    response.put("player", player.getDto());
         }
 
         List<Map<String, Object>> gamesdto = gameRepository.findAll().stream().map(game -> game.getDto()).collect(Collectors.toList());
@@ -178,28 +175,88 @@ public class SalvoController {
                 response.put("error", "You must add 5 ships!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }
-            if (ships.stream().anyMatch(ship -> this.illegalPosition(ship))) {
-                response.put("error", "Some of your's ships are wrong placed!");
+            if (ships.stream().anyMatch(ship -> this.isOutOfRange(ship))) {
+                response.put("error", "Some of your's ships is out of range!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }else if(ships.stream().anyMatch(ship -> this.isNotConsecutive(ship))){
+                response.put("error", "Some of your's ships are consecutive!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }else if(this.areOverlapped(ships)){
+                response.put("error", "Some of your's ships are overlapped!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }else{
+                ships.forEach(ship -> gamePlayer.setShip(ship));
+                gamePlayerRepository.save(gamePlayer);
+                response.put("status", "Ships placed!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
             }
-            ships.forEach(ship -> gamePlayer.setShip(ship));
-            gamePlayerRepository.save(gamePlayer);
 
-            /**
-             *  AIRCRAFT CARRIER -> SIZE 5
-             *  BATTLESHIP -> SIZE 4
-             *  SUBMARINE -> SIZE 3
-             *  DESTROYER -> SIZE 3
-             *  PATROL BOAT -> SIZE 2
-             */
-            response.put("status", "Ships placed!");
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
         }
     }
 
-    private boolean illegalPosition(Ship ship){
-        /* TODO: Check overlaping, border limits*/
+    private boolean isOutOfRange(Ship ship){
+        for(String cell : ship.getLocations()){
+            if(!(cell instanceof String) || cell.length() < 2) {
+                return true;
+            }
+            char y = cell.substring(0,1).charAt(0);
+            Integer x;
+            try{
+                x = Integer.parseInt(cell.substring(1));
+            }catch(NumberFormatException e){
+                x = 99;
+            }
+            if(x < 1 || x > 10 || y < 'A' || y > 'J'){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    private boolean isNotConsecutive(Ship ship){
+        List<String> cells = ship.getLocations();
+        boolean isVertical = cells.get(0).charAt(0) != cells.get(1).charAt(0);
+        for(int i = 0; i < cells.size(); i++){
+            if(i < cells.size() -1){
+                if(isVertical){
+                    char yChar = cells.get(i).substring(0,1).charAt(0);
+                    char compareChar = cells.get(i + 1).substring(0,1).charAt(0);
+                    if(compareChar - yChar != 1){
+                        return true;
+                    }
+                }else{
+                    Integer xInt = Integer.parseInt(cells.get(i).substring(1));
+                    Integer compareInt = Integer.parseInt(cells.get(i + 1).substring(1));
+                    if(compareInt - xInt != 1){
+                        return true;
+                    }
+                }
+            }
+            for(int j = i + 1; j < cells.size(); j++){
+                if(isVertical){
+                    if(!cells.get(i).substring(1).equals(cells.get(j).substring(1))){
+                        return true;
+                    }
+                }else{
+                    if(!cells.get(i).substring(0,1).equals(cells.get(j).substring(0,1))){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean areOverlapped(List<Ship> ships){
+        List<String> allCells = new ArrayList<>();
+        ships.forEach(ship -> allCells.addAll(ship.getLocations()));
+        for(int i = 0; i < allCells.size(); i++){
+            for(int j = i + 1; j < allCells.size(); j++){
+                if(allCells.get(i).equals(allCells.get(j))){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 

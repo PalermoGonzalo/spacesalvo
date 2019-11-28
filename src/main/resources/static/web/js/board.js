@@ -28,19 +28,19 @@ var app = new Vue({
 		unSaveShips: [
 		                {
 		                    shipType:"AIRCRAFT CARRIER",
-                            location:[]
+                            locations:[]
                         },{
                             shipType:"BATTLESHIP",
-                            location:[]
+                            locations:[]
                         },{
                             shipType:"SUBMARINE",
-                            location:[]
+                            locations:[]
                         },{
                             shipType:"DESTROYER",
-                            location:[]
+                            locations:[]
                         },{
                             shipType:"PATROL BOAT",
-                            location:[]
+                            locations:[]
                         }
                      ]
 	},
@@ -151,7 +151,7 @@ var app = new Vue({
 				    if(this.validation(tempShip) == 0){
 				        this.unSaveShips.forEach(function(ship){
 				            if(ship.shipType == tempShip.ships){
-				                ship.location = [...ship.location, ...tempShip.location];
+				                ship.locations = [...ship.locations, ...tempShip.location];
 				            }
 				        });
                     }
@@ -175,7 +175,7 @@ var app = new Vue({
 			    this.unSaveShips.forEach(function(unSaved){
 			        // Valido que no se superpongan los barcos
 			        ship.location.forEach(function(position){
-			            if(unSaved.location.indexOf(position) != -1){
+			            if(unSaved.locations.indexOf(position) != -1){
 			                response = 1;
 			                console.log("The ship overlaps with others!");
 			            }
@@ -223,8 +223,8 @@ var app = new Vue({
 			        }
 			    });
 			    this.unSaveShips.forEach(function(ship){
-			        if(ship.location.indexOf(id) != -1){
-                        response = ship.ships;
+			        if(ship.locations.indexOf(id) != -1){
+                        response = ship.shipType;
                     }
 			    });
 			    return response;
@@ -243,7 +243,7 @@ var app = new Vue({
                 });
                 this.unSaveShips.forEach(function(ship){
                     if(ship.shipType == shipType){
-                        if(ship.location.length != 0){
+                        if(ship.locations.length != 0){
                              response = false;
                          }
                     }
@@ -258,7 +258,7 @@ var app = new Vue({
 	   shipsLocated: function(){
 	       let count = 0;
 	       this.unSaveShips.forEach(function(ship){
-	            if(ship.location.length == 0){
+	            if(ship.locations.length == 0){
 	                console.log(count);
 	                count++;
 	            }
