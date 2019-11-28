@@ -28,7 +28,7 @@ public class GamePlayer {
     @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
     private Set<Ship> ships = new HashSet<>();
 
-    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Salvo> salvo = new HashSet<>();
 
     //private Date joinDate;
@@ -65,6 +65,11 @@ public class GamePlayer {
     }
 
     public Set<Salvo> getSalvo(){ return salvo;}
+
+    public void setSalvo(Salvo salvo){
+        this.salvo.add(salvo);
+        salvo.setGamePlayer(this);
+    }
 
     public Map<String, Object> getDto(){
         Map<String, Object> gamePlayerDto = new LinkedHashMap<>();

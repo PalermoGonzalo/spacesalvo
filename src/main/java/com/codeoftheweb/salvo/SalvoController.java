@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo;
 
+import org.hibernate.cfg.CreateKeySecondPass;
 import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -258,6 +259,37 @@ public class SalvoController {
             }
         }
         return false;
+    }
+
+    @RequestMapping(path="/games/players/{id}/salvoes", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> addSalvoes(Authentication authentication, @PathVariable long id, @RequestBody List<String> shots){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "You must be log to join this game!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else{
+            GamePlayer gamePlayer = gamePlayerRepository.findById(id).orElse(null);
+            Player player = playerRepository.findByEmail(authentication.getName());
+            if ( gamePlayer == null ){
+                response.put("error", "Not such game!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+            }
+            if (gamePlayer.getPlayer().getId() != player.getId()){
+                response.put("error", "You are not allowed to see this player information!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+            if(shots.size() != 5){
+                response.put("error", "Wrong number of shots!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }else{
+                int turn = gamePlayer.getSalvo().size() + 1;
+                Salvo salvo = new Salvo(turn, shots);
+                gamePlayer.setSalvo(salvo);
+                gamePlayerRepository.save(gamePlayer);
+                response.put("success", "Salvo added!");
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
+            }
+        }
     }
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)

@@ -28,6 +28,11 @@ public class Salvo {
 
     public Salvo() { }
 
+    public Salvo(int turn, List<String> locations){
+        this.turn = turn;
+        this.cell = locations;
+    }
+
     public Salvo(int turn, GamePlayer GamePlayer, List<String> locations){
         this.turn = turn;
         this.gamePlayer = GamePlayer;
@@ -50,6 +55,9 @@ public class Salvo {
         return this.cell;
     }
 
+    public void setGamePlayer(GamePlayer gamePlayer){
+        this.gamePlayer = gamePlayer;
+    }
 
     public Map<String, Object> getDto(){
         Map<String, Object> salvoDto = new LinkedHashMap<>();
