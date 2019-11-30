@@ -186,8 +186,11 @@ public class SalvoController {
                 response.put("error", "Some of your's ships are overlapped!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }else{
-                ships.forEach(ship -> gamePlayer.setShip(ship));
-                gamePlayerRepository.save(gamePlayer);
+                ships.forEach(ship -> {
+                    ship.setGamePlayer(gamePlayer);
+                    shipRepository.save(ship);
+                });
+                //gamePlayerRepository.save(gamePlayer);
                 response.put("status", "Ships placed!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
             }
