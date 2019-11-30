@@ -33,7 +33,7 @@
                     <table style="background: url('./img/BackGround.gif')" draggable="true">
                         <tr v-for="indexV in 10"   v-on:dragover="dragover">
                             <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" style="background-color: transparent" v-on:dragover="dragover" >
-                                <img v-bind:src="'./img/' + cellContent(grid.charAt(indexH -1) + indexV) + '.png'" v-show="(cellContent(grid.charAt(indexH -1) + indexV) == false)?false:true">
+                                <img v-bind:src="'./img/' + cellContent(grid.charAt(indexH -1) + indexV) + '.png'" v-show="(cellContent(grid.charAt(indexH -1) + indexV) == false)?false:true" height="50" width="50">
                             </td>
                         </tr>
                     </table>
@@ -59,7 +59,7 @@
                     <h4> My Shoots! </h4>
                     <table style="background: url('./img/BackGround.gif')">
                         <tr v-for="indexV in 10">
-                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" ></td>
+                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)">                            </td>
                         </tr>
                     </table>
                 </center>
