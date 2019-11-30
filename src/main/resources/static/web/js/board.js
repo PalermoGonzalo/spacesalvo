@@ -254,6 +254,18 @@ var app = new Vue({
                         that.newSalvo.splice(that.newSalvo.indexOf(id), 1);
                     }
                 }
+             },
+             cellContentSalvoes: function(){
+                let response = "";
+                this.salvoes.forEach(function(salvo){
+                    if(salvo.locations.indexOf(id) != -1){
+                        response = "fire";
+                    }
+                });
+                if(newSalvo.indexOf(id) != -1){
+                     response = "missile";
+                 }
+                return response;
              }
 	 },
 	computed:{

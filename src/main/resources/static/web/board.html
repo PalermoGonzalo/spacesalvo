@@ -59,7 +59,7 @@
                     <h4> My Shoots! </h4>
                     <table style="background: url('./img/BackGround.gif')">
                         <tr v-for="indexV in 10">
-                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)">                            </td>
+                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)"> {{ cellContentSalvoes }} </td>
                         </tr>
                     </table>
                 </center>
