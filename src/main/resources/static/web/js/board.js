@@ -18,6 +18,9 @@ var app = new Vue({
 			hits:[],
 			water:[]
 		},
+		salvoes: [],
+		newSalvo: [],
+		hits: [],
 		ships:[],
 		shipsLocations:"",
 		dragElement:{
@@ -67,8 +70,10 @@ var app = new Vue({
 							 myJson.gamePlayers.forEach(function(player){
 								 if(player.id == that.selectedPlayer){
 									 that.player = player.player;
+									 that.salvoes = player.salvo;
 								 }else{
 									 that.enemy = player.player;
+									 that.hits = player.salvo;
 								 }
 							 });
 							 // Cargamos los barcos si tuviera
@@ -94,25 +99,9 @@ var app = new Vue({
                   contentType:"application/json",
                   dataType:"json",
                   success: function(response){
-                        response.forEach(function (data){
-                         if(data == "status"){
-                             console.log("OK");
-                         }else{
-                            console.log("error");
-                            console.log(response);
-                         }
-                     });
+                        console.log(response);
                   }
                 });
-                /*
-                 $.post("/api/games/players/" + this.selectedPlayer + "/ships", JSON.stringify(this.unSaveShips) )
-                     .done(function(response) {
-
-                     })
-                     .fail(function(){
-                         alert("Username or password error!");
-                     });
-                     */
 			 },
 			 returnHome: function(){
 			    window.location.href = '/web/games.html';
@@ -235,7 +224,7 @@ var app = new Vue({
              loadShip: function(shipType){
                 let response = true;
                 this.ships.forEach(function(ship){
-                    if(ship.ships == shipType){
+                    if(ship.ship == shipType){
                         if(ship.position.length != 0){
                             response = false;
                         }
@@ -249,6 +238,22 @@ var app = new Vue({
                     }
                 });
                 return response;
+             },
+             setSalvo: function(id){
+                let that = this;
+                let block = false;
+                that.salvoes.forEach(function(turn){
+                    if(turn.locations.indexOf(id) != -1){
+                        block = true;
+                    }
+                });
+                if(!block){
+                    if(that.newSalvo.indexOf(id) == -1 && that.newSalvo.length < 5){
+                        that.newSalvo.push(id);
+                    }else if(that.newSalvo.indexOf(id) != -1){
+                        that.newSalvo.splice(that.newSalvo.indexOf(id), 1);
+                    }
+                }
              }
 	 },
 	computed:{
