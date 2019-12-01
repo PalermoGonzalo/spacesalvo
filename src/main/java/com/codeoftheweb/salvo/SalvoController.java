@@ -4,6 +4,7 @@ import org.hibernate.cfg.CreateKeySecondPass;
 import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,6 +31,8 @@ public class SalvoController {
     private ShipRepository shipRepository;
     @Autowired
     private ScoresRepository scoresRepository;
+    @Autowired
+    private SalvoRepository salvoRepository;
 
     @RequestMapping(path = "/games", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> games(Authentication authentication) {
@@ -287,13 +290,38 @@ public class SalvoController {
             }else{
                 int turn = gamePlayer.getSalvo().size() + 1;
                 Salvo salvo = new Salvo(turn, shots);
-                gamePlayer.setSalvo(salvo);
-                gamePlayerRepository.save(gamePlayer);
+                salvo.setGamePlayer(gamePlayer);
+                salvoRepository.save(salvo);
+                //gamePlayer.setSalvo(salvo);
+                //gamePlayerRepository.save(gamePlayer);
                 response.put("success", "Salvo added!");
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
             }
         }
     }
+
+    @RequestMapping(path="/games/players/{id}/salvoes", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getSalvoes(Authentication authentication, @PathVariable long id){
+        Map<String, Object> response = new HashMap<>();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            response.put("error", "You must be log to access this game!");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.UNAUTHORIZED);
+        }else {
+            GamePlayer gamePlayer = gamePlayerRepository.findById(id).orElse(null);
+            Player player = playerRepository.findByEmail(authentication.getName());
+            if ( gamePlayer == null ){
+                response.put("error", "Not such game!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+            }
+            if (gamePlayer.getPlayer().getId() != player.getId()){
+                response.put("error", "You are not allowed to see this player information!");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+            }
+            response.put("Salvoes", gamePlayer.getSalvo().stream().map(sp -> sp.getDto()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+        }
+    }
+
 
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(
