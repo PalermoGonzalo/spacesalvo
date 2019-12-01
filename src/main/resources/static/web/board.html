@@ -52,6 +52,7 @@
                 <br>
                 <center>
                     <button class="btn" v-on:click="rotate"> {{ btnText }} </button>
+                    <button class="btn" v-on:click="fire"> Fire! </button>
                 </center>
             </div>
             <div class="col-md-5">
@@ -59,7 +60,7 @@
                     <h4> My Shoots! </h4>
                     <table style="background: url('./img/BackGround.gif')">
                         <tr v-for="indexV in 10">
-                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)"> {{ cellContentSalvoes }} </td>
+                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)" v-bind:class="cellContentSalvoes(grid.charAt(indexH -1) + indexV)">  </td>
                         </tr>
                     </table>
                 </center>
@@ -101,5 +102,13 @@
         border-radius: 5px;
         padding: 0;
         margin: 0;
+    }
+
+    .explosion {
+        background-image: url("./img/explosion.png");
+    }
+
+    .missile {
+        background-image: url("./img/missile.png");
     }
 </style>
