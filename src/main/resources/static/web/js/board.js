@@ -91,7 +91,6 @@ var app = new Vue({
 					 });
 			 },
 			 saveShips: function(){
-			    console.log("Saving ships...");
 			    $.ajax({
                   url:"/api/games/players/" + this.selectedPlayer + "/ships",
                   type:"POST",
@@ -103,6 +102,22 @@ var app = new Vue({
                   }
                 });
 			 },
+             fire: function(){
+                if(this.newSalvo.length == 5){
+                    $.ajax({
+                       url:"/api/games/players/" + this.selectedPlayer + "/salvoes",
+                       type:"POST",
+                       data:JSON.stringify(this.newSalvo),
+                       contentType:"application/json",
+                       dataType:"json",
+                       success: function(response){
+                             console.log(response);
+                       }
+                    });
+                }else{
+                    alert("shots incomplete!");
+                }
+             },
 			 returnHome: function(){
 			    window.location.href = '/web/games.html';
 			 },
@@ -255,14 +270,14 @@ var app = new Vue({
                     }
                 }
              },
-             cellContentSalvoes: function(){
+             cellContentSalvoes: function(id){
                 let response = "";
                 this.salvoes.forEach(function(salvo){
                     if(salvo.locations.indexOf(id) != -1){
-                        response = "fire";
+                        response = "explosion";
                     }
                 });
-                if(newSalvo.indexOf(id) != -1){
+                if(this.newSalvo.indexOf(id) != -1){
                      response = "missile";
                  }
                 return response;
@@ -276,7 +291,6 @@ var app = new Vue({
 	       let count = 0;
 	       this.unSaveShips.forEach(function(ship){
 	            if(ship.locations.length == 0){
-	                console.log(count);
 	                count++;
 	            }
 	       });
