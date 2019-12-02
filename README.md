@@ -11,7 +11,7 @@ Como base de datos se utilizo H2 de forma no persistente (tipo SQL).
 
 ## Descripción del Juego
 
-El juego cuenta con una landing page que es un tablero de posiciones donde se muestran los puntajes de los jugadores. (1 punto por juego ganado, 0.5 por empatado y 0 por pedridos)
+El juego cuenta con una landing page que es un tablero de posiciones donde se muestran los puntajes de los jugadores. (1 punto por juego ganado, 0.5 por empatado y 0 por perdidos)
 
 Solo se permite jugar estando registrado y logueado. Para ello cuenta con un registro simple donde se solicita un email y contraseña.
 
