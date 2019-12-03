@@ -49,6 +49,10 @@ public class GamePlayer {
         return player;
     }
 
+    public GamePlayer getOpponent() {
+        return this.getGame().getGamePlayers().stream().filter(gp -> gp.getId() != this.getId()).findFirst().orElse(null);
+    }
+
     public Game getGame(){
         return game;
     }
