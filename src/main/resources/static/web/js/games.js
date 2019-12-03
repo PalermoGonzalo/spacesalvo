@@ -26,12 +26,12 @@ var app = new Vue({
                      })
                      .then(function(myJson) {
                          this.app.scores = myJson;
-                         console.log(this.app.scores);
+                         //console.log(this.app.scores);
                          myJson.forEach(function(score){
                             let newPlayer = 1;
                             this.app.players.forEach(function(player){
                                 if(player.player == score.player){
-                                    console.log("old Player");
+                                    //console.log("old Player");
                                     if(score.score == 1){
                                         player['win'] += 1;
                                         player['totalScore'] += 1;
@@ -45,7 +45,7 @@ var app = new Vue({
                                 }
                             });
                             if(newPlayer == 1){
-                                console.log("new player");
+                                //console.log("new player");
                                 let playerStats = [];
                                 playerStats['player'] = score.player;
                                 playerStats['win'] = 0;
@@ -76,7 +76,7 @@ var app = new Vue({
                 $.post("/api/login", { username: this.form.email, password: this.form.password })
                     .done(function(response) {
                         //console.log("logged in!");
-                        console.log(response);
+                        //console.log(response);
                         that.loadGames();
                         that.showLogin = 0;
                     })
@@ -91,7 +91,7 @@ var app = new Vue({
                       return response.json();
                   })
                   .then(function(myJson) {
-                      //console.log(myJson);
+                      console.log(myJson);
                       that.playerId = myJson.player.id;
                       that.games = myJson;
                       that.email = myJson.player.user;
@@ -109,9 +109,10 @@ var app = new Vue({
                  $.post("/api/players", { username: this.form.email, password: this.form.password })
                      .done(function() {
                          alert("you have register succesfully!")
-                         app.form.email = "";
-                         app.form.password = "";
-                         app.register = 0;
+                         app.login();
+                         //app.form.email = "";
+                         //app.form.password = "";
+                         //app.register = 0;
                      })
                      .fail(function(){
                         alert("User already exists!");
@@ -137,7 +138,7 @@ var app = new Vue({
              let that = this;
                 $.post("/api/games")
                     .then(function(response) {
-                        console.log(response);
+                        //console.log(response);
                         that.redirect(response.gamePlayerId);
                         return response;
                     })

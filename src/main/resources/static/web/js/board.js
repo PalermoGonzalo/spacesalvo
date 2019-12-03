@@ -124,6 +124,7 @@ var app = new Vue({
 			 logout: function(){
 				  $.post("/api/logout")
 					  .then(function() {
+					      //this.app.returnHome;
 						  alert("Logged out");
 					  });
 			  },
@@ -167,6 +168,7 @@ var app = new Vue({
 				    this.saveShips();
 				}
 			 },
+			 // Validacion barcos dentro de grilla
 			 innerGrid: function(index, pos){
 			    if(pos + index < 10){
 			        return true;
@@ -174,6 +176,7 @@ var app = new Vue({
 			        return false;
 			    }
 			 },
+			 // Validacion barcos superpuestos
 			 validation: function(ship){
 			    let response = 0;
 			    this.unSaveShips.forEach(function(unSaved){
@@ -197,7 +200,7 @@ var app = new Vue({
 			    let response = false;
 			    this.ships.forEach(function(ship){
                     if(ship.position.indexOf(id) != -1){
-                        //response = true;
+                        response = true;
                     }
                 });
                 return response;
@@ -295,6 +298,12 @@ var app = new Vue({
 	            }
 	       });
 	       return count;
+	   },
+	   shipAvailable: function(){
+	       return (this.shipsLocated == 0)?false:true;
+	   },
+	   enableFire: function(){
+	       return false;
 	   }
 	}
 });

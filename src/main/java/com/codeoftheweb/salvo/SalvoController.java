@@ -1,10 +1,7 @@
 package com.codeoftheweb.salvo;
 
-import org.hibernate.cfg.CreateKeySecondPass;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -292,8 +289,6 @@ public class SalvoController {
                 Salvo salvo = new Salvo(turn, shots);
                 salvo.setGamePlayer(gamePlayer);
                 salvoRepository.save(salvo);
-                //gamePlayer.setSalvo(salvo);
-                //gamePlayerRepository.save(gamePlayer);
                 response.put("success", "Salvo added!");
                 return new ResponseEntity<>(response, HttpStatus.CREATED);
             }

@@ -16,16 +16,19 @@
                 </div>
             </div>
             <div class="justify-content-center">
-                    <h4 style="color: white"> {{ player.user }}! </h4>
+                    <!--<h4 style="color: white"> {{ player.user }}! </h4>-->
+                <h4 style="color: white"> {{ player && player.user ? player.user : "" }} vs {{ enemy && enemy.user ? enemy.user : "Waiting opponent..."}} </h4>
             </div>
             <div class="justify-content-end">
                     <button class="btn" v-on:click="logout()"> Logout </button>
             </div>
         </div>
+        <!--
         <center>
             <h2>Match</h2>
             <p> {{ player && player.user ? player.user : "" }} vs {{ enemy && enemy.user ? enemy.user : ""}} </p>
         </center>
+        -->
         <div class="row">
             <div class="col-md-5">
                 <center>
@@ -51,7 +54,7 @@
                 </ul>
                 <br>
                 <center>
-                    <button class="btn" v-on:click="rotate"> {{ btnText }} </button>
+                    <button class="btn" v-on:click="rotate" v-show="shipAvailable"> {{ btnText }} </button>
                     <button class="btn" v-on:click="fire"> Fire! </button>
                 </center>
             </div>
