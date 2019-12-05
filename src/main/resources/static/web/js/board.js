@@ -86,6 +86,7 @@ var app = new Vue({
 								 this.app.ships.push(objShip);
 								 this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
 							 });
+							 console.log(myJson);
 						 }
 						 return myJson;
 					 });
@@ -300,10 +301,30 @@ var app = new Vue({
 	       return count;
 	   },
 	   shipAvailable: function(){
-	       return (this.shipsLocated == 0)?false:true;
+	       this.shipsType.type.forEach(function(ship){
+	            if(this.loadShip(ship) != false){
+	                return true;
+	            }
+	       });
+	       return false;
 	   },
 	   enableFire: function(){
 	       return false;
+	   },
+	   maxTurn: function(){
+	        let maxTurni = 0;
+	        this.salvoes.forEach(function(salvo){
+	            if(salvo.turn > maxTurni){
+	                maxTurni = salvo.turn;
+	            }
+	        });
+	        this.hits.forEach(function(salvo){
+	            if(salvo.turn > maxTurni){
+	                maxTurni = salvo.turn;
+	            }
+	        });
+	        console.log(maxTurni);
+	        return maxTurni;
 	   }
 	}
 });

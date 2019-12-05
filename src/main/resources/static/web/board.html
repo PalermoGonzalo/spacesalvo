@@ -23,42 +23,45 @@
                     <button class="btn" v-on:click="logout()"> Logout </button>
             </div>
         </div>
-        <!--
-        <center>
-            <h2>Match</h2>
-            <p> {{ player && player.user ? player.user : "" }} vs {{ enemy && enemy.user ? enemy.user : ""}} </p>
-        </center>
-        -->
-        <div class="row">
-            <div class="col-md-5">
+        <div class="row pt-2">
+            <div class="col-md-4">
                 <center>
                     <h4> My Ships!</h4>
                     <table style="background: url('./img/BackGround.gif')" draggable="true">
                         <tr v-for="indexV in 10"   v-on:dragover="dragover">
                             <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" style="background-color: transparent" v-on:dragover="dragover" >
-                                <img v-bind:src="'./img/' + cellContent(grid.charAt(indexH -1) + indexV) + '.png'" v-show="(cellContent(grid.charAt(indexH -1) + indexV) == false)?false:true" height="50" width="50">
+                                <img v-bind:src="'./img/' + cellContent(grid.charAt(indexH -1) + indexV) + '.png'" v-show="(cellContent(grid.charAt(indexH -1) + indexV) == false)?false:true" height="40" width="40">
                             </td>
                         </tr>
                     </table>
+                    <button class="btn pt-2" v-on:click="saveShips" v-show="(shipsLocated == 0)?true:false"> Save Ships! </button>
                 </center>
             </div>
-            <div class="col-md-2 justify-content-center">
-                <br>
-                <br>
-                <ul>
+            <div class="col-md-4 justify-content-center">
+                <ul class="mt-4">
                     <li v-for="ship in shipsType.type" v-show="loadShip(ship)">
                         <div v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true" class="ship-rotation" v-bind:class="{rotateHorizontal: (dragElement.rotation == 0)?true:false, rotateVertical: (dragElement.rotation == 0)?false:true }">
                             <img v-bind:src="'./img/' + ship + '.png'">
                         </div>
                     </li>
                 </ul>
-                <br>
                 <center>
-                    <button class="btn" v-on:click="rotate" v-show="shipAvailable"> {{ btnText }} </button>
-                    <button class="btn" v-on:click="fire"> Fire! </button>
+                    <button class="btn pt-2" v-on:click="rotate" v-show="shipAvailable"> {{ btnText }} </button>
                 </center>
+                <table class="table mt-2">
+                    <tr>
+                        <th>Turn</th>
+                        <th>My Hits</th>
+                        <th>Opponent Hits</th>
+                    </tr>
+                    <tr>
+                        <td> 1 </td>
+                        <td> 2 </td>
+                        <td> 3 </td>
+                    </tr>
+                </table>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <center>
                     <h4> My Shoots! </h4>
                     <table style="background: url('./img/BackGround.gif')">
@@ -66,9 +69,28 @@
                             <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)" v-bind:class="cellContentSalvoes(grid.charAt(indexH -1) + indexV)">  </td>
                         </tr>
                     </table>
+                    <button class="btn pt-2" v-on:click="fire"> Fire! </button>
                 </center>
             </div>
         </div>
+        <!--
+        <div class="row">
+            <div class="col-md-8 text-center">
+                <table class="table">
+                    <tr>
+                        <th>Turn</th>
+                        <th>Your Hits</th>
+                        <th>Enemy Hits</th>
+                    </tr>
+                    <tr v-for="turn in maxTurn">
+                        <td> {{ turn }} </td>
+                        <td> {{ salvoes[turn].hits }} </td>
+                        <td> {{ hits[turn].hits }} </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        -->
     </div>
 
     <!-- jQuery -->
@@ -90,8 +112,8 @@
     }
 
     tr {
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
         border: 1px solid white;
         border-radius: 5px;
         padding: 0;
@@ -99,8 +121,8 @@
     }
 
     td {
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
         border: 1px solid white;
         border-radius: 5px;
         padding: 0;

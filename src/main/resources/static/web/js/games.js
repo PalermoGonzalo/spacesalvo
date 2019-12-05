@@ -79,6 +79,8 @@ var app = new Vue({
                         //console.log(response);
                         that.loadGames();
                         that.showLogin = 0;
+                        app.form.email = "";
+                        app.form.password = "";
                     })
                     .fail(function(){
                         alert("Username or password error!");
@@ -112,7 +114,7 @@ var app = new Vue({
                          app.login();
                          //app.form.email = "";
                          //app.form.password = "";
-                         //app.register = 0;
+                         app.register = 0;
                      })
                      .fail(function(){
                         alert("User already exists!");
@@ -159,6 +161,9 @@ var app = new Vue({
                      .fail(function(response){
                         alert("d'ho!, something bad happened!");
                      });
+             },
+             setLogin: function(){
+                this.register = 0;
              }
      },
      computed:{
