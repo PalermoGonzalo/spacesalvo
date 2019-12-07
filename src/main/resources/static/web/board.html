@@ -34,7 +34,7 @@
                             </td>
                         </tr>
                     </table>
-                    <button class="btn pt-2" v-on:click="saveShips" v-show="(shipsLocated == 0)?true:false"> Save Ships! </button>
+                    <button class="btn mt-2" v-on:click="saveShips" v-show="(shipsLocated == 0)?true:false"> Save Ships! </button>
                 </center>
             </div>
             <div class="col-md-4 justify-content-center">
@@ -51,13 +51,25 @@
                 <table class="table mt-2">
                     <tr>
                         <th>Turn</th>
-                        <th>My Hits</th>
-                        <th>Opponent Hits</th>
+                        <th>My Salvoes</th>
+                        <th>Opponent Salvoes</th>
                     </tr>
-                    <tr>
-                        <td> 1 </td>
-                        <td> 2 </td>
-                        <td> 3 </td>
+                    <tr v-for="turn in maxTurn">
+                        <td> {{ turn }} </td>
+                        <td> {{ hitNumber(turn, "Me") }} Hits
+                            <ul v-show="sunkNumber(turn, 'Me')">
+                                <li v-for="ship in getSunked(turn, 'Me')">
+                                    {{ ship }}
+                                </li>
+                            </ul>
+                        </td>
+                        <td> {{ hitNumber(turn, "Opponent") }} Hits
+                            <ul v-show="sunkNumber(turn, 'Opponent')">
+                                <li v-for="ship in getSunked(turn, 'Opponent')">
+                                    {{ ship }}
+                                </li>
+                            </ul>
+                        </td>
                     </tr>
                 </table>
             </div>
@@ -69,28 +81,10 @@
                             <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)" v-bind:class="cellContentSalvoes(grid.charAt(indexH -1) + indexV)">  </td>
                         </tr>
                     </table>
-                    <button class="btn pt-2" v-on:click="fire"> Fire! </button>
+                    <button class="btn mt-2" v-on:click="fire"> Fire! </button>
                 </center>
             </div>
         </div>
-        <!--
-        <div class="row">
-            <div class="col-md-8 text-center">
-                <table class="table">
-                    <tr>
-                        <th>Turn</th>
-                        <th>Your Hits</th>
-                        <th>Enemy Hits</th>
-                    </tr>
-                    <tr v-for="turn in maxTurn">
-                        <td> {{ turn }} </td>
-                        <td> {{ salvoes[turn].hits }} </td>
-                        <td> {{ hits[turn].hits }} </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        -->
     </div>
 
     <!-- jQuery -->

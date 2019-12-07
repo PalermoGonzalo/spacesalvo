@@ -104,6 +104,7 @@ var app = new Vue({
                 });
 			 },
              fire: function(){
+             let that = this;
                 if(this.newSalvo.length == 5){
                     $.ajax({
                        url:"/api/games/players/" + this.selectedPlayer + "/salvoes",
@@ -112,7 +113,7 @@ var app = new Vue({
                        contentType:"application/json",
                        dataType:"json",
                        success: function(response){
-                             console.log(response);
+                             location.reload();
                        }
                     });
                 }else{
@@ -285,6 +286,78 @@ var app = new Vue({
                      response = "missile";
                  }
                 return response;
+             },
+             hitNumber: function(turn, player){
+                let that = this;
+                let hitNumb = 0;
+                if(player == "Me"){
+                    that.salvoes.forEach(function(salvoTurn){
+                        if(salvoTurn.turn == turn){
+                            hitNumb = salvoTurn.hits.length;
+                        }
+                    });
+                }else{
+                    that.hits.forEach(function(salvoTurn){
+                        if(salvoTurn.turn == turn){
+                            hitNumb = salvoTurn.hits.length;
+                        }
+                    });
+                }
+                return hitNumb;
+             },
+             sunkNumber: function(turn, player){
+                let that = this;
+                 let sunkNumb = false;
+                 if(player == "Me"){
+                     that.salvoes.forEach(function(salvoTurn){
+                         if(salvoTurn.turn == turn){
+                             sunkNumb = true;
+                         }
+                     });
+                 }else{
+                     that.hits.forEach(function(salvoTurn){
+                         if(salvoTurn.turn == turn){
+                             sunkNumb = true;
+                         }
+                     });
+                 }
+                 return sunkNumb;
+             },
+             getSunked: function(turn, player){
+                let that = this;
+                let sunked = [];
+                if(player == "Me"){
+                     that.salvoes.forEach(function(salvoTurn){
+                         if(salvoTurn.turn == turn){
+                            /*
+                            salvoTurn.Sunk.forEach(function(ship){
+                                console.log(ship.shipType);
+                                sunked.push(ship.shipType);
+                            });
+                            */
+                            for(i = 0; i < salvoTurn.Sunk.length; i++){
+                                console.log(salvoTurn.Sunk);
+                                console.log(salvoTurn.Sunk[i].shipType);
+                                sunked.push(salvoTurn.Sunk[i].shipType);
+                              }
+                         }
+                     });
+                 }else{
+                     that.hits.forEach(function(salvoTurn){
+                          if(salvoTurn.turn == turn){
+                          for(i = 0; i < salvoTurn.Sunk.length; i++){
+                            sunked.push(salvoTurn.Sunk.shipType);
+                          }
+                          /*
+                             salvoTurn.Sunk.forEach(function(ship){
+                                 console.log(ship);
+                                 sunked.push(ship.shipType);
+                             });
+                          */
+                          }
+                      });
+                 }
+                 return sunked;
              }
 	 },
 	computed:{
@@ -301,8 +374,9 @@ var app = new Vue({
 	       return count;
 	   },
 	   shipAvailable: function(){
+	       let that = this;
 	       this.shipsType.type.forEach(function(ship){
-	            if(this.loadShip(ship) != false){
+	            if(that.loadShip(ship) != false){
 	                return true;
 	            }
 	       });
