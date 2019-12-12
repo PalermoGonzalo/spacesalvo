@@ -34,7 +34,7 @@
                             </td>
                         </tr>
                     </table>
-                    <button class="btn mt-2" v-on:click="saveShips" v-show="(shipsLocated == 0)?true:false"> Save Ships! </button>
+                    <button class="btn mt-2" v-on:click="saveShips" v-show="(gameData.ships.length == 0 && shipsLocated == 0)?true:false"> Save Ships! </button>
                 </center>
             </div>
             <div class="col-md-4 justify-content-center">
@@ -46,7 +46,7 @@
                     </li>
                 </ul>
                 <center>
-                    <button class="btn pt-2" v-on:click="rotate" v-show="shipAvailable"> {{ btnText }} </button>
+                    <button class="btn pt-2" v-on:click="rotate" v-show="(gameData.ships.length == 0 && shipsLocated != 0)?true:false"> {{ btnText }} </button>
                 </center>
                 <table class="table mt-2">
                     <tr>
@@ -59,14 +59,14 @@
                         <td> {{ hitNumber(turn, "Me") }} Hits
                             <ul v-show="sunkNumber(turn, 'Me')">
                                 <li v-for="ship in getSunked(turn, 'Me')">
-                                    {{ ship }}
+                                    {{ ship }} Sunked!
                                 </li>
                             </ul>
                         </td>
                         <td> {{ hitNumber(turn, "Opponent") }} Hits
                             <ul v-show="sunkNumber(turn, 'Opponent')">
                                 <li v-for="ship in getSunked(turn, 'Opponent')">
-                                    {{ ship }}
+                                    {{ ship }} Sunked!
                                 </li>
                             </ul>
                         </td>
@@ -81,7 +81,7 @@
                             <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" v-on:click="setSalvo(grid.charAt(indexH -1) + indexV)" v-bind:class="cellContentSalvoes(grid.charAt(indexH -1) + indexV)">  </td>
                         </tr>
                     </table>
-                    <button class="btn mt-2" v-on:click="fire"> Fire! </button>
+                    <button class="btn mt-2" v-on:click="fire" v-show="(gameData.gamePlayers.length > 1 && gameData.scores.length == 0)?true:false"> Fire! </button>
                 </center>
             </div>
         </div>
@@ -105,6 +105,11 @@
         background-color: #000000;
     }
 
+    ul {
+        list-style-type: none;
+        padding-inline-start: 0px;
+    }
+
     tr {
         height: 40px;
         width: 40px;
@@ -125,6 +130,284 @@
 
     .explosion {
         background-image: url("./img/explosion.png");
+        background-size: 40px;
+    }
+
+    .miss-explosion {
+        background-image: url("./img/miss-explosion.png");
+        background-size: 40px;
+    }
+
+    .patrol-h0 {
+        background-image: url("./img/PATROL BOAT.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .patrol-h1 {
+        background-image: url("./img/PATROL BOAT.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .patrol-v0 {
+        background-image: url("./img/PATROL BOAT.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .patrol-v1 {
+        background-image: url("./img/PATROL BOAT.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .submarine-h0 {
+        background-image: url("./img/SUBMARINE.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .submarine-h1 {
+        background-image: url("./img/SUBMARINE.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .submarine-h2 {
+        background-image: url("./img/SUBMARINE.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .submarine-v0 {
+        background-image: url("./img/SUBMARINE.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .submarine-v1 {
+        background-image: url("./img/SUBMARINE.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .submarine-v2 {
+        background-image: url("./img/SUBMARINE.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .destroyer-h0 {
+        background-image: url("./img/DESTROYER.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .destroyer-h1 {
+        background-image: url("./img/DESTROYER.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .destroyer-h2 {
+        background-image: url("./img/DESTROYER.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .destroyer-v0 {
+        background-image: url("./img/DESTROYER.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .destroyer-v1 {
+        background-image: url("./img/DESTROYER.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .destroyer-v2 {
+        background-image: url("./img/DESTROYER.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .battleship-h0 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .battleship-h1 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .battleship-h2 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .battleship-h3 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 300%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .battleship-v0 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .battleship-v1 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .battleship-v2 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .battleship-v3 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-position-x: 300%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .carrier-h0 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .carrier-h1 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .carrier-h2 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .carrier-h3 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 300%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .carrier-h4 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 400%;
+        height: 40px;
+        width: 40px;
+    }
+
+    .carrier-v0 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 0%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .carrier-v1 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 100%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .carrier-v2 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 200%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .carrier-v3 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 300%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .carrier-v4 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-position-x: 400%;
+        height: 40px;
+        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
 
     .missile {
