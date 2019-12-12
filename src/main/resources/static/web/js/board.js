@@ -8,6 +8,7 @@ var app = new Vue({
 			size:[5,4,3,3,2],
 			imageHeight:50,
 		},
+		gameData: "",
 		player:"",
 		enemy:"",
 		btnText: "Vertical",
@@ -87,6 +88,7 @@ var app = new Vue({
 								 this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
 							 });
 							 console.log(myJson);
+							 this.app.gameData = myJson;
 						 }
 						 return myJson;
 					 });
@@ -99,7 +101,7 @@ var app = new Vue({
                   contentType:"application/json",
                   dataType:"json",
                   success: function(response){
-                        console.log(response);
+                        location.reload();
                   }
                 });
 			 },
@@ -141,12 +143,14 @@ var app = new Vue({
 
 				for(index = 0; index < count; index++){
 					if(this.dragElement.rotation > 0){
+					    console.log(row);
 						if(this.innerGrid(row, index)){
 						    tempShip.location.push(this.grid.charAt(column) + (row + index));
 						}else{
 						    illegalPos = true;
 						}
 					}else{
+					    console.log(column);
 						if(this.innerGrid(column, index)){
 						    tempShip.location.push(this.grid.charAt(column + index)+row);
 						}else{
@@ -167,7 +171,9 @@ var app = new Vue({
 				}
                 console.log(this.shipsLocated);
 				if(this.shipsLocated == 0){
-				    this.saveShips();
+				    //if(confirm("Do you want to save yours ships?")){
+				        this.saveShips();
+				    //}
 				}
 			 },
 			 // Validacion barcos dentro de grilla
@@ -243,6 +249,9 @@ var app = new Vue({
              },
              loadShip: function(shipType){
                 let response = true;
+                //if(this.ships.ship && !this.ships.ship.includes(shipType)){ response = false;}
+                //if(this.unSaveShips.shipType && !this.unSaveShips.shipType.includes(shipType)){ response = false;};
+
                 this.ships.forEach(function(ship){
                     if(ship.ship == shipType){
                         if(ship.position.length != 0){
@@ -257,6 +266,7 @@ var app = new Vue({
                          }
                     }
                 });
+
                 return response;
              },
              setSalvo: function(id){
