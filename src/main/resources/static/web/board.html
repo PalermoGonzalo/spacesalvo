@@ -29,8 +29,8 @@
                     <h4> My Ships!</h4>
                     <table style="background: url('./img/BackGround.gif')" draggable="true">
                         <tr v-for="indexV in 10"   v-on:dragover="dragover">
-                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" style="background-color: transparent" v-on:dragover="dragover" >
-                                <img v-bind:src="'./img/' + cellContent(grid.charAt(indexH -1) + indexV) + '.png'" v-show="(cellContent(grid.charAt(indexH -1) + indexV) == false)?false:true" height="40" width="40">
+                            <td v-for="indexH in 10" v-bind:id="grid.charAt(indexH -1) + indexV" style="background-color: transparent" v-on:dragover="dragover" v-bind:class="getShipClass(grid.charAt(indexH -1) + indexV)">
+                                <!--<img v-bind:src="'./img/' + cellContent(grid.charAt(indexH -1) + indexV) + '.png'" v-show="(cellContent(grid.charAt(indexH -1) + indexV) == false)?false:true" height="40" width="40">-->
                             </td>
                         </tr>
                     </table>
@@ -138,274 +138,308 @@
         background-size: 40px;
     }
 
-    .patrol-h0 {
+    .PATROL-BOAT-H0 {
         background-image: url("./img/PATROL BOAT.png");
-        background-position-x: 0%;
+        background-size: 80px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 0%;
     }
 
-    .patrol-h1 {
+    .PATROL-BOAT-H1 {
         background-image: url("./img/PATROL BOAT.png");
-        background-position-x: 100%;
+        background-size: 80px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 100%;
     }
 
-    .patrol-v0 {
+    .PATROL-BOAT-V0 {
         background-image: url("./img/PATROL BOAT.png");
-        background-position-x: 0%;
+        background-size: 80px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 0%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
 
-    .patrol-v1 {
+    .PATROL-BOAT-V1 {
         background-image: url("./img/PATROL BOAT.png");
-        background-position-x: 100%;
+        background-size: 80px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 100%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
 
-    .submarine-h0 {
+    .SUBMARINE-H0 {
         background-image: url("./img/SUBMARINE.png");
-        background-position-x: 0%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 0%;
     }
 
-    .submarine-h1 {
+    .SUBMARINE-H1 {
         background-image: url("./img/SUBMARINE.png");
-        background-position-x: 100%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 50%;
     }
 
-    .submarine-h2 {
+    .SUBMARINE-H2 {
         background-image: url("./img/SUBMARINE.png");
-        background-position-x: 200%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 100%;
     }
 
-    .submarine-v0 {
+    .SUBMARINE-V0 {
         background-image: url("./img/SUBMARINE.png");
-        background-position-x: 0%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 0%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
 
-    .submarine-v1 {
+    .SUBMARINE-V1 {
         background-image: url("./img/SUBMARINE.png");
-        background-position-x: 100%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 50%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
 
-    .submarine-v2 {
+    .SUBMARINE-V2 {
         background-image: url("./img/SUBMARINE.png");
-        background-position-x: 200%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
-    }
-
-    .destroyer-h0 {
-        background-image: url("./img/DESTROYER.png");
-        background-position-x: 0%;
-        height: 40px;
-        width: 40px;
-    }
-
-    .destroyer-h1 {
-        background-image: url("./img/DESTROYER.png");
         background-position-x: 100%;
-        height: 40px;
-        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
 
-    .destroyer-h2 {
+    .DESTROYER-H0 {
         background-image: url("./img/DESTROYER.png");
-        background-position-x: 200%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 0%;
     }
 
-    .destroyer-v0 {
+    .DESTROYER-H1 {
         background-image: url("./img/DESTROYER.png");
-        background-position-x: 0%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
+        background-position-x: 50%;
     }
 
-    .destroyer-v1 {
+    .DESTROYER-H2 {
         background-image: url("./img/DESTROYER.png");
-        background-position-x: 100%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
+        background-position-x: 100%;
     }
 
-    .destroyer-v2 {
+    .DESTROYER-V0 {
         background-image: url("./img/DESTROYER.png");
-        background-position-x: 200%;
+        background-size: 120px 40px;
         height: 40px;
         width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
-    }
-
-    .battleship-h0 {
-        background-image: url("./img/BATTLESHIP.png");
         background-position-x: 0%;
-        height: 40px;
-        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
 
-    .battleship-h1 {
-        background-image: url("./img/BATTLESHIP.png");
+    .DESTROYER-V1 {
+        background-image: url("./img/DESTROYER.png");
+        background-size: 120px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 50%;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .DESTROYER-V2 {
+        background-image: url("./img/DESTROYER.png");
+        background-size: 120px 40px;
+        height: 40px;
+        width: 40px;
         background-position-x: 100%;
-        height: 40px;
-        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
 
-    .battleship-h2 {
+    .BATTLESHIP-H0 {
         background-image: url("./img/BATTLESHIP.png");
-        background-position-x: 200%;
+        background-size: 160px 40px;
         height: 40px;
         width: 40px;
-    }
-
-    .battleship-h3 {
-        background-image: url("./img/BATTLESHIP.png");
-        background-position-x: 300%;
-        height: 40px;
-        width: 40px;
-    }
-
-    .battleship-v0 {
-        background-image: url("./img/BATTLESHIP.png");
         background-position-x: 0%;
-        height: 40px;
-        width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
     }
 
-    .battleship-v1 {
+    .BATTLESHIP-H1 {
         background-image: url("./img/BATTLESHIP.png");
+        background-size: 160px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 33.33%;
+    }
+
+    .BATTLESHIP-H2 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-size: 160px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 66.66%;
+    }
+
+    .BATTLESHIP-H3 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-size: 160px 40px;
+        height: 40px;
+        width: 40px;
         background-position-x: 100%;
-        height: 40px;
-        width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
     }
 
-    .battleship-v2 {
+    .BATTLESHIP-V0 {
         background-image: url("./img/BATTLESHIP.png");
-        background-position-x: 200%;
+        background-size: 160px 40px;
         height: 40px;
         width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
-    }
-
-    .battleship-v3 {
-        background-image: url("./img/BATTLESHIP.png");
-        background-position-x: 300%;
-        height: 40px;
-        width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
-    }
-
-    .carrier-h0 {
-        background-image: url("./img/AIRCRAFT CARRIER.png");
         background-position-x: 0%;
-        height: 40px;
-        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
 
-    .carrier-h1 {
-        background-image: url("./img/AIRCRAFT CARRIER.png");
+    .BATTLESHIP-V1 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-size: 160px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 33.33%;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .BATTLESHIP-V2 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-size: 160px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 66.66%;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .BATTLESHIP-V3 {
+        background-image: url("./img/BATTLESHIP.png");
+        background-size: 160px 40px;
+        height: 40px;
+        width: 40px;
         background-position-x: 100%;
-        height: 40px;
-        width: 40px;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
     }
 
-    .carrier-h2 {
+    .AIRCRAFT-CARRIER-H0 {
         background-image: url("./img/AIRCRAFT CARRIER.png");
-        background-position-x: 200%;
+        background-size: 200px 40px;
         height: 40px;
         width: 40px;
-    }
-
-    .carrier-h3 {
-        background-image: url("./img/AIRCRAFT CARRIER.png");
-        background-position-x: 300%;
-        height: 40px;
-        width: 40px;
-    }
-
-    .carrier-h4 {
-        background-image: url("./img/AIRCRAFT CARRIER.png");
-        background-position-x: 400%;
-        height: 40px;
-        width: 40px;
-    }
-
-    .carrier-v0 {
-        background-image: url("./img/AIRCRAFT CARRIER.png");
         background-position-x: 0%;
-        height: 40px;
-        width: 40px;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
     }
 
-    .carrier-v1 {
+    .AIRCRAFT-CARRIER-H1 {
         background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-size: 200px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 25%;
+    }
+
+    .AIRCRAFT-CARRIER-H2 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-size: 200px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 50%;
+    }
+
+    .AIRCRAFT-CARRIER-H3 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-size: 200px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 75%;
+    }
+
+    .AIRCRAFT-CARRIER-H4 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-size: 200px 40px;
+        height: 40px;
+        width: 40px;
         background-position-x: 100%;
+    }
+
+    .AIRCRAFT-CARRIER-V0 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-size: 200px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 0%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
 
-    .carrier-v2 {
+    .AIRCRAFT-CARRIER-V1 {
         background-image: url("./img/AIRCRAFT CARRIER.png");
-        background-position-x: 200%;
+        background-size: 200px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 25%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
 
-    .carrier-v3 {
+    .AIRCRAFT-CARRIER-V2 {
         background-image: url("./img/AIRCRAFT CARRIER.png");
-        background-position-x: 300%;
+        background-size: 200px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 50%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
 
-    .carrier-v4 {
+    .AIRCRAFT-CARRIER-V3 {
         background-image: url("./img/AIRCRAFT CARRIER.png");
-        background-position-x: 400%;
+        background-size: 200px 40px;
         height: 40px;
         width: 40px;
+        background-position-x: 75%;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .AIRCRAFT-CARRIER-V4 {
+        background-image: url("./img/AIRCRAFT CARRIER.png");
+        background-size: 200px 40px;
+        height: 40px;
+        width: 40px;
+        background-position-x: 100%;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);
     }
