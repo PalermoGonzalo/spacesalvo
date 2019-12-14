@@ -40,7 +40,7 @@
             <div class="col-md-4 justify-content-center">
                 <ul class="mt-4">
                     <li v-for="ship in shipsType.type" v-show="loadShip(ship)">
-                        <div v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true" class="ship-rotation" v-bind:class="{rotateHorizontal: (dragElement.rotation == 0)?true:false, rotateVertical: (dragElement.rotation == 0)?false:true }">
+                        <div v-bind:id="ship" v-on:dragstart="()=>{setDragElement(ship)}" v-on:dragend="drop" v-bind:height="shipsType.imageHeight" draggable="true">
                             <img v-bind:src="'./img/' + ship + '.png'">
                         </div>
                     </li>
@@ -48,7 +48,7 @@
                 <center>
                     <button class="btn pt-2" v-on:click="rotate" v-show="(gameData.ships.length == 0 && shipsLocated != 0)?true:false"> {{ btnText }} </button>
                 </center>
-                <table class="table mt-2">
+                <table class="table mt-2" v-show="(gameData.ships.length == 0 && shipsLocated != 0)?false:true">
                     <tr>
                         <th>Turn</th>
                         <th>My Salvoes</th>

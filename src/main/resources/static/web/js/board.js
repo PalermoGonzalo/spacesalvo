@@ -6,7 +6,7 @@ var app = new Vue({
 		shipsType:{
 			type:["AIRCRAFT CARRIER","BATTLESHIP","SUBMARINE","DESTROYER","PATROL BOAT"],
 			size:[5,4,3,3,2],
-			imageHeight:50,
+			imageHeight:40,
 		},
 		gameData: "",
 		player:"",
@@ -106,7 +106,7 @@ var app = new Vue({
                 });
 			 },
              fire: function(){
-             let that = this;
+                let that = this;
                 if(this.newSalvo.length == 5){
                     $.ajax({
                        url:"/api/games/players/" + this.selectedPlayer + "/salvoes",
@@ -135,7 +135,7 @@ var app = new Vue({
 			 drop: function(ev){
 				let count = this.shipsType.size[this.shipsType.type.indexOf(this.dragElement.shipType)];
 				let column = this.grid.indexOf(this.dragElement.position.substring(0, 1));
-				let row = parseInt(this.dragElement.position.substring(1, 2));
+				let row = parseInt(this.dragElement.position.substring(1));
 				illegalPos = false;
 
 				let tempShip = {ships:"", location:[]};
@@ -143,14 +143,12 @@ var app = new Vue({
 
 				for(index = 0; index < count; index++){
 					if(this.dragElement.rotation > 0){
-					    console.log(row);
-						if(this.innerGrid(row, index)){
+						if(this.innerGrid((row-1), index)){
 						    tempShip.location.push(this.grid.charAt(column) + (row + index));
 						}else{
 						    illegalPos = true;
 						}
 					}else{
-					    console.log(column);
 						if(this.innerGrid(column, index)){
 						    tempShip.location.push(this.grid.charAt(column + index)+row);
 						}else{
@@ -251,7 +249,6 @@ var app = new Vue({
                 let response = true;
                 //if(this.ships.ship && !this.ships.ship.includes(shipType)){ response = false;}
                 //if(this.unSaveShips.shipType && !this.unSaveShips.shipType.includes(shipType)){ response = false;};
-
                 this.ships.forEach(function(ship){
                     if(ship.ship == shipType){
                         if(ship.position.length != 0){
@@ -339,12 +336,6 @@ var app = new Vue({
                 if(player == "Me"){
                      that.salvoes.forEach(function(salvoTurn){
                          if(salvoTurn.turn == turn){
-                            /*
-                            salvoTurn.Sunk.forEach(function(ship){
-                                console.log(ship.shipType);
-                                sunked.push(ship.shipType);
-                            });
-                            */
                             for(i = 0; i < salvoTurn.Sunk.length; i++){
                                 console.log(salvoTurn.Sunk);
                                 console.log(salvoTurn.Sunk[i].shipType);
@@ -355,15 +346,9 @@ var app = new Vue({
                  }else{
                      that.hits.forEach(function(salvoTurn){
                           if(salvoTurn.turn == turn){
-                          for(i = 0; i < salvoTurn.Sunk.length; i++){
-                            sunked.push(salvoTurn.Sunk.shipType);
-                          }
-                          /*
-                             salvoTurn.Sunk.forEach(function(ship){
-                                 console.log(ship);
-                                 sunked.push(ship.shipType);
-                             });
-                          */
+                              for(i = 0; i < salvoTurn.Sunk.length; i++){
+                                sunked.push(salvoTurn.Sunk.shipType);
+                              }
                           }
                       });
                  }
