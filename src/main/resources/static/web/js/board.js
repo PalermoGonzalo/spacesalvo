@@ -353,6 +353,41 @@ var app = new Vue({
                       });
                  }
                  return sunked;
+             },
+             getShipClass: function(id){
+                let response = "";
+                let that = this;
+
+                if(this.gameData.ships.length != 0){
+                    this.gameData.ships.forEach(function(ship){
+                        if(ship.locations.includes(id)){
+                            let shipType = ship.shipType.replace(/\s/g, "-");
+                            response = shipType + "-" + that.getRotation(ship.locations) + ship.locations.indexOf(id);
+                        }
+                    });
+                } else {
+                    this.unSaveShips.forEach(function(ship){
+                        if(ship.locations.includes(id)){
+                            let shipType = ship.shipType.replace(/\s/g, "-");
+                            response = shipType + "-" + that.getRotation(ship.locations) + ship.locations.indexOf(id);
+                        }
+                    });
+                }
+
+                this.gameData.gamePlayers.forEach(function(gamePlayer){
+                    if(gamePlayer.id == this.player.id && gamePlayer.salvo.locations.includes(id)){
+                        response = "explosion";
+                    }
+                });
+
+                return response;
+             },
+             getRotation: function(locations){
+                if(locations[0].substring(0, 1) == locations[1].substring(0, 1)){
+                    return "V";
+                }else{
+                    return "H";
+                }
              }
 	 },
 	computed:{
