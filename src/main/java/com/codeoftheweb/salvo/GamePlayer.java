@@ -75,6 +75,12 @@ public class GamePlayer {
         salvo.setGamePlayer(this);
     }
 
+    public List<Ship> getSunkenShips(Set<Salvo> mySalvoes, Set<Ship> opponentShips){
+        List<String> allShots = new ArrayList<>();
+        mySalvoes.forEach(salvo -> allShots.addAll(salvo.getLocations()));
+        return opponentShips.stream().filter(ship -> allShots.containsAll(ship.getLocations())).collect(Collectors.toList());
+    }
+
     public Map<String, Object> getDto(){
         Map<String, Object> gamePlayerDto = new LinkedHashMap<>();
         gamePlayerDto.put("id", this.getId());
@@ -98,5 +104,59 @@ public class GamePlayer {
         gamePlayerDto.put("id", player.getId());
         gamePlayerDto.put("user", player.getEmail());
         return gamePlayerDto;
+    }
+
+    public enum GameState {
+        UNDEFINED,
+        ENTER_SHIPS,
+        WAIT_OPPONENT,
+        WAIT_OPPONENT_SHIPS,
+        FIRE,
+        WAIT,
+        WON,
+        LOST,
+        TIED
+    }
+
+    public GameState getGameState(){
+        GameState gameState = GameState.UNDEFINED;
+
+        if(this.getShips().size() == 0){
+            gameState = GameState.ENTER_SHIPS;
+        }else{
+            GamePlayer opponent = this.getOpponent();
+
+            if(opponent == null){
+                gameState = GameState.WAIT_OPPONENT;
+            }else if(opponent.getShips().size() == 0){
+                gameState = GameState.WAIT_OPPONENT_SHIPS;
+            }else{
+                boolean firstPlayer = this.getId() < opponent.getId();
+                int myTurn = this.getSalvo().size() + 1;
+                int opponentTurn = opponent.getSalvo().size() + 1;
+
+                if(firstPlayer && myTurn == opponentTurn){
+                    gameState = GameState.FIRE;
+                }else if(!firstPlayer && myTurn < opponentTurn){
+                    gameState = GameState.FIRE;
+                }else{
+                    gameState = GameState.WAIT;
+                }
+
+                int mySunkenShips = this.getSunkenShips(this.getSalvo(), opponent.getShips()).size();
+                int opponentSunkenShips = opponent.getSunkenShips(this.getSalvo(), this.getShips()).size();
+
+                if(myTurn == opponentTurn){
+                    if(mySunkenShips == 5 && opponentSunkenShips < 5){
+                        gameState = GameState.WON;
+                    }else if(opponentSunkenShips == 5 && mySunkenShips < 5){
+                        gameState = GameState.LOST;
+                    }else if(opponentSunkenShips == 5 && mySunkenShips == 5){
+                        gameState = GameState.TIED;
+                    }
+                }
+            }
+        }
+        return gameState;
     }
 }
