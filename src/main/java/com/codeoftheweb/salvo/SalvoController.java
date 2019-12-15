@@ -1,6 +1,8 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.config.RepositoryNameSpaceHandler;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -285,12 +287,30 @@ public class SalvoController {
                 response.put("error", "Wrong number of shots!");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             }else{
-                int turn = gamePlayer.getSalvo().size() + 1;
-                Salvo salvo = new Salvo(turn, shots);
-                salvo.setGamePlayer(gamePlayer);
-                salvoRepository.save(salvo);
-                response.put("success", "Salvo added!");
-                return new ResponseEntity<>(response, HttpStatus.CREATED);
+                GamePlayer.GameState gameState = gamePlayer.getGameState();
+
+                if(!gameState.equals(GamePlayer.GameState.FIRE)){
+                    response.put("error", gamePlayer.getGameState());
+                    return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
+                }else{
+                    int turn = gamePlayer.getSalvo().size() + 1;
+                    Salvo salvo = new Salvo(turn, shots);
+                    salvo.setGamePlayer(gamePlayer);
+                    salvoRepository.save(salvo);
+                    response.put("success", "Salvo added!");
+
+                    if(gamePlayer.getGameState().equals(GamePlayer.GameState.WON)){
+                        scoresRepository.save(new Scores(gamePlayer.getPlayer(), gamePlayer.getGame(), 1));
+                        scoresRepository.save(new Scores(gamePlayer.getOpponent().getPlayer(), gamePlayer.getGame(), 0));
+                    }else if(gamePlayer.getGameState().equals(GamePlayer.GameState.LOST)){
+                        scoresRepository.save(new Scores(gamePlayer.getPlayer(), gamePlayer.getGame(), 0));
+                        scoresRepository.save(new Scores(gamePlayer.getOpponent().getPlayer(), gamePlayer.getGame(), 1));
+                    }else if(gamePlayer.getGameState().equals(GamePlayer.GameState.TIED)){
+                        scoresRepository.save(new Scores(gamePlayer.getPlayer(), gamePlayer.getGame(), 0.5));
+                        scoresRepository.save(new Scores(gamePlayer.getOpponent().getPlayer(), gamePlayer.getGame(), 0.5));
+                    }
+                    return new ResponseEntity<>(response, HttpStatus.CREATED);
+                }
             }
         }
     }
@@ -348,9 +368,9 @@ public class SalvoController {
                 response.put("error", "Usted no pertenece a este juego");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.FORBIDDEN);
             } else {
-                //GamePlayer gamePlayer = gamePlayerRepository.getOne(id);
                 response = gamePlayer.getGame().getDto();
                 response.put("ships", gamePlayer.getShips().stream().map(ship -> ship.getDto()));
+                response.put("gameState", gamePlayer.getGameState());
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.ACCEPTED);
             }
         }
