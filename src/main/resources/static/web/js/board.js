@@ -12,6 +12,7 @@ var app = new Vue({
 		player:"",
 		enemy:"",
 		btnText: "Vertical",
+		gameState: "",
 		myBoard:{
 			ships:[],
 			location:[],
@@ -53,6 +54,7 @@ var app = new Vue({
 		let params = new URLSearchParams(uri);
 		this.selectedPlayer = params.get("gp");
 		this.loadGames();
+		this.startInterval();
 	 },
 	 methods: {
 			 loadGames: function() {
@@ -87,13 +89,18 @@ var app = new Vue({
 								 this.app.ships.push(objShip);
 								 this.app.shipsLocations = [...this.app.shipsLocations, ...ship.locations];
 							 });
-							 console.log(myJson);
+							 if(myJson.gameState == "WAIT"){
+							    this.app.gameState = "Waiting opponent shots...";
+							 }else if(myJson.gameState == "FIRE"){
+							    this.app.gameState = "Your turn to fire!";
+							 }
 							 this.app.gameData = myJson;
 						 }
 						 return myJson;
 					 });
 			 },
 			 saveShips: function(){
+			    let that = this;
 			    $.ajax({
                   url:"/api/games/players/" + this.selectedPlayer + "/ships",
                   type:"POST",
@@ -101,7 +108,8 @@ var app = new Vue({
                   contentType:"application/json",
                   dataType:"json",
                   success: function(response){
-                        location.reload();
+                        //location.reload();
+                        that.loadGames();
                   }
                 });
 			 },
@@ -115,7 +123,8 @@ var app = new Vue({
                        contentType:"application/json",
                        dataType:"json",
                        success: function(response){
-                             location.reload();
+                             that.loadGames();
+                             //location.reload();
                        }
                     });
                 }else{
@@ -167,7 +176,6 @@ var app = new Vue({
 				}else{
 				    console.log("Illegal position!");
 				}
-                console.log(this.shipsLocated);
 				if(this.shipsLocated == 0){
 				    //if(confirm("Do you want to save yours ships?")){
 				        this.saveShips();
@@ -219,7 +227,6 @@ var app = new Vue({
 				return response;
 			 },
 			 rotate: function(){
-			    console.log(this.dragElement.rotation);
 				if(this.dragElement.rotation == 0){
 				    this.dragElement.rotation = 90;
 				    this.btnText = "Horizontal";
@@ -283,15 +290,20 @@ var app = new Vue({
                 }
              },
              cellContentSalvoes: function(id){
+                let that = this;
                 let response = "";
-                this.salvoes.forEach(function(salvo){
-                    if(salvo.locations.indexOf(id) != -1){
-                        response = "explosion";
+                if(this.newSalvo.includes(id)){response = "MISSILE";}
+                this.gameData.gamePlayers.forEach(function(gp){
+                    if(gp.id == that.player.id){
+                        gp.salvo.forEach(function(sv){
+                            if(sv.hits.includes(id)){
+                                response = "EXPLOSION";
+                            }else if(sv.locations.includes(id)){
+                                response = "MISS-EXPLOSION";
+                            }
+                        });
                     }
                 });
-                if(this.newSalvo.indexOf(id) != -1){
-                     response = "missile";
-                 }
                 return response;
              },
              hitNumber: function(turn, player){
@@ -337,8 +349,6 @@ var app = new Vue({
                      that.salvoes.forEach(function(salvoTurn){
                          if(salvoTurn.turn == turn){
                             for(i = 0; i < salvoTurn.Sunk.length; i++){
-                                console.log(salvoTurn.Sunk);
-                                console.log(salvoTurn.Sunk[i].shipType);
                                 sunked.push(salvoTurn.Sunk[i].shipType);
                               }
                          }
@@ -358,7 +368,19 @@ var app = new Vue({
                 let response = "";
                 let that = this;
 
-                if(this.gameData.ships.length != 0){
+                this.gameData.gamePlayers.forEach(function(gp){
+                    if(gp.id != that.player.id){
+                        gp.salvo.forEach(function(sv){
+                            if(sv.hits.includes(id)){
+                                response = "EXPLOSION";
+                            }else if(sv.locations.includes(id)){
+                                response = "MISS-EXPLOSION";
+                            }
+                        });
+                    }
+                });
+
+                if(this.gameData.ships.length != 0 && response == ""){
                     this.gameData.ships.forEach(function(ship){
                         if(ship.locations.includes(id)){
                             let shipType = ship.shipType.replace(/\s/g, "-");
@@ -373,13 +395,6 @@ var app = new Vue({
                         }
                     });
                 }
-
-                this.gameData.gamePlayers.forEach(function(gamePlayer){
-                    if(gamePlayer.id == this.player.id && gamePlayer.salvo.locations.includes(id)){
-                        response = "explosion";
-                    }
-                });
-
                 return response;
              },
              getRotation: function(locations){
@@ -388,7 +403,15 @@ var app = new Vue({
                 }else{
                     return "H";
                 }
-             }
+             },
+             startInterval: function () {
+                let that = this;
+                  setInterval(() => {
+                    if(that.gameData.gameState == "WAIT_OPPONENT" || that.gameData.gameState == "WAIT_OPPONENT_SHIPS" || that.gameData.gameState == "WAIT"){
+                        that.loadGames();
+                    }
+                  }, 5000);
+              }
 	 },
 	computed:{
 	   currentHeight: function(){
@@ -427,7 +450,6 @@ var app = new Vue({
 	                maxTurni = salvo.turn;
 	            }
 	        });
-	        console.log(maxTurni);
 	        return maxTurni;
 	   }
 	}
